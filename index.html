@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎮 67賭博娛樂城</title>
+  <title>🎮 賽博電玩城 - Cyber Arcade Portal</title>
   
   <!-- 引入 Google Fonts Outfit 與 Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -4617,6 +4617,491 @@ window.drawAirHockey=function drawAirHockeyGoalOnly(){ctxAir.fillStyle='#050816'
       ensureMinesCashoutDom();
       renderMinesCashoutBoard();
     }, 700);
+  });
+})();
+</script>
+
+
+<style id="responsive-mobile-performance-style">
+  /* =====================================================
+     全站 RWD + 手機遊戲效能優化
+     ===================================================== */
+  :root { --vh: 1vh; }
+
+  /* Canvas / 遊戲區避免手機滑動頁面干擾操作 */
+  .game-viewport,
+  .game-wrap,
+  #tank-canvas,
+  #snake-canvas,
+  #dino-canvas,
+  #airhockey-canvas,
+  #mines-game-wrapper,
+  #blackjack-game-wrapper {
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 桌面也稍微降低卡頓：大型區塊可隔離繪製 */
+  .game-card,
+  .widget-box,
+  .theater-details,
+  .game-viewport,
+  .featured-banner {
+    contain: layout paint;
+  }
+
+  /* 手機版：整體間距與版面 */
+  @media (max-width: 768px) {
+    body {
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    .main-content {
+      margin-left: 0 !important;
+      padding: 14px 12px 88px 12px !important;
+      max-width: 100vw !important;
+    }
+
+    .featured-banner {
+      min-height: 190px;
+      padding: 22px !important;
+      border-radius: 18px !important;
+    }
+
+    .banner-title { font-size: 1.42rem !important; }
+    .banner-desc { font-size: .82rem !important; }
+
+    .game-grid {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+      margin-bottom: 22px !important;
+    }
+
+    .game-card {
+      height: auto !important;
+      min-height: 250px !important;
+      border-radius: 16px !important;
+      transform: none !important;
+    }
+    .game-card:hover { transform: none !important; }
+    .card-thumb { height: 124px !important; }
+    .card-thumb-badge { font-size: 3rem !important; }
+    .card-info { padding: 15px !important; }
+    .card-title { font-size: 1.06rem !important; }
+    .card-desc { font-size: .8rem !important; }
+
+    .theater-container {
+      display: block !important;
+    }
+    .theater-main { gap: 14px !important; }
+
+    .game-viewport {
+      width: 100% !important;
+      height: calc(var(--vh) * 62) !important;
+      min-height: 430px !important;
+      max-height: 680px !important;
+      aspect-ratio: auto !important;
+      padding: 10px !important;
+      border-width: 2px !important;
+      border-radius: 18px !important;
+      overflow: hidden !important;
+    }
+
+    .game-wrap.active {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .btn-viewport-fullscreen {
+      width: 40px !important;
+      height: 40px !important;
+      top: 10px !important;
+      right: 10px !important;
+      z-index: 120 !important;
+    }
+
+    /* 各遊戲在手機版的尺寸 */
+    #tank-game-wrapper,
+    #snake-game-wrapper,
+    #dino-game-wrapper,
+    #airhockey-game-wrapper,
+    #blackjack-game-wrapper,
+    #mines-game-wrapper {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    #tank-canvas,
+    #snake-canvas,
+    #dino-canvas,
+    #airhockey-canvas {
+      width: min(100%, 92vw) !important;
+      height: auto !important;
+      max-height: calc(var(--vh) * 45) !important;
+      object-fit: contain !important;
+    }
+
+    #tank-canvas,
+    #snake-canvas {
+      max-width: min(92vw, 420px) !important;
+    }
+
+    #airhockey-canvas,
+    #dino-canvas {
+      max-width: 96vw !important;
+    }
+
+    .mobile-controls {
+      margin-top: 10px !important;
+      width: 138px !important;
+      height: 138px !important;
+      gap: 7px !important;
+    }
+    .dpad-btn {
+      border-radius: 12px !important;
+      font-size: 1.1rem !important;
+    }
+
+    /* 坦克手機控制器 */
+    .tank-mobile-controls {
+      display: grid !important;
+    }
+
+    /* Blackjack 手機版避免按鈕被切到 */
+    .game-viewport.active-blackjack:not(:fullscreen) {
+      height: calc(var(--vh) * 72) !important;
+      min-height: 620px !important;
+    }
+    #blackjack-table,
+    #blackjack-table.modern-bj-table {
+      width: 100% !important;
+      max-width: 96vw !important;
+      min-height: auto !important;
+      height: auto !important;
+      max-height: calc(var(--vh) * 66) !important;
+      overflow-y: auto !important;
+      padding: 14px !important;
+      border-radius: 16px !important;
+      transform: none !important;
+    }
+    .bj-controls {
+      grid-template-columns: 1fr !important;
+      gap: 8px !important;
+    }
+    .bj-controls button {
+      min-height: 42px !important;
+      font-size: .92rem !important;
+    }
+    .bj-card {
+      width: 36px !important;
+      height: 50px !important;
+      font-size: .82rem !important;
+    }
+
+    /* Mines 手機版 */
+    .mines-board-shell {
+      width: min(96vw, 420px) !important;
+      padding: 14px !important;
+      border-radius: 18px !important;
+    }
+    .mines-grid {
+      width: min(88vw, 340px) !important;
+      gap: 6px !important;
+      padding: 6px !important;
+    }
+    .mines-cell {
+      font-size: 1.42rem !important;
+      border-radius: 6px !important;
+    }
+    .mines-topbar {
+      align-items: stretch !important;
+      gap: 8px !important;
+    }
+    .mines-title-block strong { font-size: .98rem !important; }
+    .mines-score-pill { min-width: 78px !important; padding: 8px 10px !important; }
+
+    .theater-details,
+    .widget-box {
+      padding: 16px !important;
+      border-radius: 16px !important;
+    }
+    .detail-header-row {
+      gap: 10px !important;
+    }
+    .detail-title {
+      font-size: 1.25rem !important;
+    }
+    .control-guide-grid {
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+    }
+
+    .theater-sidebar {
+      margin-top: 14px !important;
+      gap: 14px !important;
+    }
+
+    /* 大廳右側排行榜在手機改成上方全寬 */
+    #view-home .home-lobby-layout {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+    #view-home .home-sidebar-column {
+      position: static !important;
+      order: -1 !important;
+    }
+
+    /* 手機降低昂貴陰影與動畫，減少卡頓 */
+    .glow-overlay,
+    .banner-glow {
+      display: none !important;
+    }
+    .game-card,
+    .featured-banner,
+    .game-viewport,
+    .widget-box,
+    .theater-details,
+    #blackjack-table,
+    .mines-board-shell {
+      box-shadow: 0 8px 24px rgba(0,0,0,.32) !important;
+    }
+    * {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  @media (max-width: 430px) {
+    .game-viewport {
+      height: calc(var(--vh) * 60) !important;
+      min-height: 400px !important;
+      padding: 8px !important;
+    }
+    #tank-canvas,
+    #snake-canvas {
+      max-width: min(88vw, 360px) !important;
+    }
+    #airhockey-canvas,
+    #dino-canvas {
+      width: 94vw !important;
+    }
+    .mobile-nav-bar {
+      height: 64px !important;
+      overflow-x: auto !important;
+      justify-content: flex-start !important;
+      gap: 4px !important;
+      padding: 0 8px !important;
+      scrollbar-width: none;
+    }
+    .mobile-nav-bar::-webkit-scrollbar { display: none; }
+    .mobile-nav-btn {
+      flex: 0 0 58px !important;
+      width: 58px !important;
+      font-size: .68rem !important;
+    }
+  }
+
+  /* 手機橫向：遊戲優先滿版 */
+  @media (max-height: 520px) and (orientation: landscape) {
+    .main-content { padding: 8px 10px 74px 10px !important; }
+    .game-viewport {
+      height: calc(var(--vh) * 82) !important;
+      min-height: 300px !important;
+    }
+    #tank-canvas,
+    #snake-canvas,
+    #dino-canvas,
+    #airhockey-canvas {
+      max-height: calc(var(--vh) * 70) !important;
+    }
+    .theater-details,
+    .theater-sidebar {
+      display: none !important;
+    }
+  }
+
+  /* 使用者要求減少動畫時，全面降低特效 */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* 坦克手機控制器 */
+  .tank-mobile-controls {
+    display: none;
+    grid-template-columns: repeat(3, 46px) 58px;
+    grid-template-rows: repeat(3, 46px);
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    touch-action: none;
+  }
+  .tank-mobile-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    border: 1px solid rgba(6,182,212,.35);
+    background: rgba(6,182,212,.12);
+    color: #e0faff;
+    font-weight: 950;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    touch-action: none;
+  }
+  .tank-mobile-btn:active,
+  .tank-mobile-btn.active {
+    transform: scale(.94);
+    background: rgba(6,182,212,.25);
+  }
+  .tank-mobile-btn.up { grid-column: 2; grid-row: 1; }
+  .tank-mobile-btn.left { grid-column: 1; grid-row: 2; }
+  .tank-mobile-btn.right { grid-column: 3; grid-row: 2; }
+  .tank-mobile-btn.down { grid-column: 2; grid-row: 3; }
+  .tank-mobile-btn.fire {
+    grid-column: 4;
+    grid-row: 1 / span 3;
+    width: 58px;
+    height: 100%;
+    border-color: rgba(251,191,36,.45);
+    background: rgba(251,191,36,.18);
+    color: #fff7d6;
+  }
+</style>
+
+
+<script id="responsive-mobile-performance-script">
+/* 全站 RWD、手機操作與效能優化 */
+(function () {
+  const isCoarsePointer = () => window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  const isSmallScreen = () => window.innerWidth <= 768;
+
+  function setViewportHeightVar() {
+    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+  }
+
+  function preventGameTouchScroll() {
+    const selectors = ['#tank-canvas', '#snake-canvas', '#dino-canvas', '#airhockey-canvas', '.game-viewport', '.mobile-controls', '.tank-mobile-controls', '.mines-grid'];
+    selectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        if (el.dataset.touchOptimized === '1') return;
+        el.dataset.touchOptimized = '1';
+        el.addEventListener('touchmove', event => {
+          if (document.getElementById('view-game')?.classList.contains('active')) event.preventDefault();
+        }, { passive: false });
+      });
+    });
+  }
+
+  function ensureTankMobileControls() {
+    const wrapper = document.getElementById('tank-game-wrapper');
+    if (!wrapper || document.getElementById('tank-mobile-controls')) return;
+    wrapper.insertAdjacentHTML('beforeend', `
+      <div class="tank-mobile-controls" id="tank-mobile-controls" aria-label="坦克手機控制器">
+        <button class="tank-mobile-btn up" data-key="w" type="button">▲</button>
+        <button class="tank-mobile-btn left" data-key="a" type="button">◀</button>
+        <button class="tank-mobile-btn right" data-key="d" type="button">▶</button>
+        <button class="tank-mobile-btn down" data-key="s" type="button">▼</button>
+        <button class="tank-mobile-btn fire" data-key=" " type="button">FIRE</button>
+      </div>
+    `);
+
+    const controls = document.getElementById('tank-mobile-controls');
+    controls.querySelectorAll('.tank-mobile-btn').forEach(btn => {
+      const key = btn.dataset.key;
+      const press = event => {
+        event.preventDefault();
+        if (typeof tankKeys !== 'undefined') tankKeys[key] = true;
+        btn.classList.add('active');
+        if (key === ' ' && typeof shootTankLaser === 'function' && typeof tankActive !== 'undefined' && tankActive) shootTankLaser();
+      };
+      const release = event => {
+        event.preventDefault();
+        if (typeof tankKeys !== 'undefined') tankKeys[key] = false;
+        btn.classList.remove('active');
+      };
+      btn.addEventListener('touchstart', press, { passive: false });
+      btn.addEventListener('touchend', release, { passive: false });
+      btn.addEventListener('touchcancel', release, { passive: false });
+      btn.addEventListener('mousedown', press);
+      btn.addEventListener('mouseup', release);
+      btn.addEventListener('mouseleave', release);
+    });
+  }
+
+  function optimizeCanvasResolution() {
+    // 手機上避免 CSS 放大造成太重的繪製；保持原 canvas 邏輯尺寸，但限制視覺大小。
+    ['tank-canvas', 'snake-canvas', 'dino-canvas', 'airhockey-canvas'].forEach(id => {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      canvas.style.imageRendering = 'auto';
+      canvas.style.touchAction = 'none';
+    });
+  }
+
+  function updateMobileGameViewportClass() {
+    const viewport = document.querySelector('.game-viewport');
+    if (!viewport) return;
+    let currentGame = '';
+    try { currentGame = typeof activeGameId !== 'undefined' ? activeGameId : ''; } catch (e) {}
+    viewport.classList.toggle('active-blackjack', currentGame === 'blackjack');
+    viewport.classList.toggle('active-mines', currentGame === 'mines');
+    viewport.classList.toggle('active-airhockey', currentGame === 'airhockey');
+    viewport.classList.toggle('active-tank', currentGame === 'tank');
+  }
+
+  function pauseWhenHidden() {
+    if (document.hidden) {
+      // 不清除玩家分數，只暫停會持續吃效能的動畫。
+      try { if (typeof tankActive !== 'undefined') tankActive = false; } catch (e) {}
+      try { if (typeof dinoActive !== 'undefined') dinoActive = false; } catch (e) {}
+      try { if (typeof airActive !== 'undefined') airActive = false; } catch (e) {}
+    }
+  }
+
+  function runResponsivePatch() {
+    setViewportHeightVar();
+    ensureTankMobileControls();
+    preventGameTouchScroll();
+    optimizeCanvasResolution();
+    updateMobileGameViewportClass();
+  }
+
+  const oldLoadGameInTheater = window.loadGameInTheater;
+  window.loadGameInTheater = function loadGameInTheaterResponsive(gameId) {
+    const result = oldLoadGameInTheater ? oldLoadGameInTheater(gameId) : undefined;
+    setTimeout(runResponsivePatch, 60);
+    return result;
+  };
+
+  const oldStartActiveGame = window.startActiveGame;
+  window.startActiveGame = function startActiveGameResponsive(gameType) {
+    const result = oldStartActiveGame ? oldStartActiveGame(gameType) : undefined;
+    setTimeout(runResponsivePatch, 60);
+    return result;
+  };
+
+  window.addEventListener('resize', runResponsivePatch, { passive: true });
+  window.addEventListener('orientationchange', () => setTimeout(runResponsivePatch, 250), { passive: true });
+  document.addEventListener('visibilitychange', pauseWhenHidden);
+  window.addEventListener('DOMContentLoaded', () => {
+    runResponsivePatch();
+    setTimeout(runResponsivePatch, 350);
+    setTimeout(runResponsivePatch, 900);
   });
 })();
 </script>
