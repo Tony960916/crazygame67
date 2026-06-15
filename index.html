@@ -1168,7 +1168,63 @@
         grid-template-columns: 1fr;
       }
     }
+  
+
+    /* ==========================================
+       新增遊戲：雷射曲棍球 / 21點
+       ========================================== */
+    .game-card[data-game="airhockey"] .card-thumb::after {
+      content: ''; position: absolute; width: 140px; height: 140px; border-radius: 50%;
+      background: #06b6d4; filter: blur(50px); opacity: 0.18;
+    }
+    .game-card[data-game="blackjack"] .card-thumb::after {
+      content: ''; position: absolute; width: 140px; height: 140px; border-radius: 50%;
+      background: #fbbf24; filter: blur(50px); opacity: 0.16;
+    }
+    .menu-item-btn[data-target="game-airhockey"].active::before { background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
+    .menu-item-btn[data-target="game-blackjack"].active::before { background: var(--neon-gold); box-shadow: 0 0 10px var(--neon-gold); }
+    .airhockey-overlay-btn { background: linear-gradient(135deg, var(--neon-blue) 0%, #075985 100%); box-shadow: 0 4px 15px var(--neon-blue-glow); }
+    .airhockey-overlay-btn:hover { box-shadow: 0 6px 20px rgba(6,182,212,0.65); transform: translateY(-2px); }
+    .blackjack-overlay-btn { background: linear-gradient(135deg, var(--neon-gold) 0%, #b45309 100%); color: #080816; box-shadow: 0 4px 15px var(--neon-gold-glow); }
+    .blackjack-overlay-btn:hover { box-shadow: 0 6px 20px rgba(251,191,36,0.65); transform: translateY(-2px); }
+    #airhockey-game-wrapper, #blackjack-game-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #airhockey-canvas { width: 100%; max-width: 640px; height: auto; aspect-ratio: 640 / 360; background: #050816; border-radius: 16px; border: 1px solid rgba(6,182,212,0.25); }
+    #blackjack-table { width: 100%; max-width: 720px; min-height: 360px; background: radial-gradient(circle at center, rgba(16,185,129,0.13), rgba(8,8,22,0.96)); border: 1px solid rgba(251,191,36,0.25); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+    .bj-status { color: var(--neon-gold); font-weight: 800; text-align: center; }
+    .bj-row { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 12px; }
+    .bj-label { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 8px; }
+    .bj-cards { display: flex; gap: 8px; flex-wrap: wrap; min-height: 58px; }
+    .bj-card { width: 42px; height: 58px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #f8fafc; color: #0f172a; font-weight: 900; box-shadow: 0 4px 12px rgba(0,0,0,0.35); }
+    .bj-card.red { color: #be123c; }
+    .bj-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .bj-controls button { border: none; border-radius: 10px; padding: 10px 12px; font-family: var(--font-sans); font-weight: 800; cursor: pointer; background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.08); }
+    .bj-controls button:hover { background: rgba(251,191,36,0.16); border-color: rgba(251,191,36,0.35); }
+    .bj-controls button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .game-viewport:fullscreen #airhockey-game-wrapper,
+    .game-viewport:fullscreen #blackjack-game-wrapper { width: 100%; height: 100%; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }
+    .game-viewport:fullscreen #airhockey-canvas { width: 90vw !important; height: 80vh !important; max-width: 90vw !important; max-height: 80vh !important; object-fit: contain !important; }
+    .game-viewport:fullscreen #blackjack-table { width: 80vw !important; min-height: 70vh !important; max-width: 900px !important; }
+
   </style>
+
+<style id="fullscreen-button-icon-style">
+  .btn-viewport-fullscreen {
+    font-size: 0 !important;
+  }
+  .btn-viewport-fullscreen .fullscreen-icon {
+    width: 21px;
+    height: 21px;
+    display: block;
+  }
+  .btn-viewport-fullscreen .fullscreen-icon path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>
+
 </head>
 <body>
 
@@ -1287,7 +1343,7 @@
                 <p class="card-desc">控制玩家坦克方向並開火摧毀敵軍！擁有 3 點生命防禦，挑戰最高擊毀得分。</p>
               </div>
               <div class="card-meta">
-                <span class="meta-likes" id="card-likes-tank">👍 95.9% 喜歡</span>
+                <span class="meta-likes" id="card-likes-tank">👍 讀取中...</span>
                 <span>🔥 6.2k 在線</span>
               </div>
             </div>
@@ -1308,7 +1364,7 @@
                 <p class="card-desc">畫面中將同時出現兩顆紅蘋果！極速吞食能量，修復虛擬方向鍵靈敏度，更爽快的操作。</p>
               </div>
               <div class="card-meta">
-                <span class="meta-likes" id="card-likes-snake">👍 96.1% 喜歡</span>
+                <span class="meta-likes" id="card-likes-snake">👍 讀取中...</span>
                 <span>🔥 8.1k 在線</span>
               </div>
             </div>
@@ -1329,7 +1385,7 @@
                 <p class="card-desc">升級至 700x350 更寬闊大畫面！調校重力跳躍物理與仙人掌生成，跨越層層阻撓。</p>
               </div>
               <div class="card-meta">
-                <span class="meta-likes" id="card-likes-dino">👍 95.3% 喜歡</span>
+                <span class="meta-likes" id="card-likes-dino">👍 讀取中...</span>
                 <span>🔥 6.7k 在線</span>
               </div>
             </div>
@@ -1347,7 +1403,11 @@
             <div class="game-viewport">
               
               <!-- 全螢幕懸浮按鈕 📺 -->
-              <button class="btn-viewport-fullscreen" onclick="toggleViewportFullscreen()" title="全螢幕模式">📺</button>
+              <button class="btn-viewport-fullscreen" onclick="toggleViewportFullscreen()" title="全螢幕模式" aria-label="切換全螢幕模式">
+                <svg class="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+                </svg>
+              </button>
 
               <!-- 遊戲一包裝：坦克大作戰 -->
               <div class="game-wrap" id="wrap-tank">
@@ -1516,12 +1576,6 @@
             此項目目前尚無紀錄，快來搶下第一名！
           </div>
         </div>
-
-        <div style="text-align: center; margin-top: 20px;">
-          <button class="btn-clear-leaderboard" onclick="clearGlobalLeaderboard()">
-            ⚠️ 重設此項排行榜本機紀錄
-          </button>
-        </div>
       </section>
 
     </main>
@@ -1631,16 +1685,18 @@
        B. 排行榜模組 (Firebase + LocalStorage 降級雙核心)
        ========================================== */
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyAj7ilt1Q7u4gCDloEg63rLJgNZl62ykLQ",
+      authDomain: "crazygames-765e7.firebaseapp.com",
+      projectId: "crazygames-765e7",
+      storageBucket: "crazygames-765e7.firebasestorage.app",
+      messagingSenderId: "503764823908",
+      appId: "1:503764823908:web:81cf7abedc6b465f859471",
+      measurementId: "G-Y1KB57B4QJ"
     };
 
     let db = null;
     let useFirebase = false;
+    const LEADERBOARD_COLLECTION = "arcade_leaderboard";
     const connStatusEl = document.getElementById('connection-status');
 
     if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("YOUR_")) {
@@ -1651,30 +1707,55 @@
         connStatusEl.innerText = "☁️ 雲端同步模式";
         connStatusEl.style.color = "var(--neon-green)";
       } catch (e) {
+        useFirebase = false;
         console.warn("Firebase 初始化出錯，切換至 localStorage 模式", e);
+        if (connStatusEl) {
+          connStatusEl.innerText = "⚠️ Firebase 初始化失敗，本機模式";
+          connStatusEl.style.color = "#f87171";
+        }
       }
     }
 
     async function submitGameScore(gameId, name, score) {
-      const cleanName = name.trim() || '無名英雄';
+      const cleanName = (name || '').trim() || '無名英雄';
+      const numericScore = Number(score) || 0;
       const dateStr = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      const payload = {
+        gameId,
+        name: cleanName,
+        score: numericScore,
+        date: dateStr,
+        createdAt: new Date().toISOString(),
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      console.log('[排行榜] 準備儲存分數', { useFirebase, collection: LEADERBOARD_COLLECTION, payload });
 
       if (useFirebase && db) {
         try {
-          await db.collection("arcade_leaderboard").add({
-            gameId,
-            name: cleanName,
-            score,
-            date: dateStr,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
+          const docRef = await db.collection(LEADERBOARD_COLLECTION).add(payload);
+          console.log('[排行榜] Firebase 儲存成功', docRef.id);
+          // 雲端成功後也同步一份本機快取，讓排行榜 UI 立即顯示剛儲存的分數。
+          saveScoreToLocalStorage(gameId, cleanName, numericScore, dateStr);
+          if (connStatusEl) {
+            connStatusEl.innerText = "☁️ 雲端同步模式";
+            connStatusEl.style.color = "var(--neon-green)";
+          }
+          return { ok: true, mode: 'firebase', id: docRef.id };
         } catch (error) {
-          console.warn("雲端存檔出錯，改存至本地", error);
-          saveScoreToLocalStorage(gameId, cleanName, score, dateStr);
+          console.error('[排行榜] Firebase 儲存失敗，改存本機', error);
+          saveScoreToLocalStorage(gameId, cleanName, numericScore, dateStr);
+          if (connStatusEl) {
+            connStatusEl.innerText = `⚠️ 雲端寫入失敗：${error.code || error.message || 'unknown'}`;
+            connStatusEl.style.color = "#f87171";
+          }
+          return { ok: false, mode: 'local', error };
         }
-      } else {
-        saveScoreToLocalStorage(gameId, cleanName, score, dateStr);
       }
+
+      console.warn('[排行榜] Firebase 未啟用，儲存至本機 localStorage');
+      saveScoreToLocalStorage(gameId, cleanName, numericScore, dateStr);
+      return { ok: false, mode: 'local', error: new Error('Firebase 未啟用') };
     }
 
     function saveScoreToLocalStorage(gameId, name, score, dateStr) {
@@ -1685,7 +1766,7 @@
         if (raw) {
           list = JSON.parse(raw) || [];
         }
-        list.push({ name, score, date: dateStr });
+        list.push({ name, score: Number(score) || 0, date: dateStr });
         
         // 排行排序：全部皆為得分越高越好
         list.sort((a, b) => b.score - a.score);
@@ -1699,26 +1780,68 @@
 
     async function getGameLeaderboard(gameId, limit = 10) {
       if (useFirebase && db) {
+        // Firestore 讀取優先走「gameId + score 排序」查詢。
+        // 如果複合索引尚未建立/還在 building，會自動改用不需要複合索引的查詢，再由前端排序。
         try {
-          let query = db.collection("arcade_leaderboard").where("gameId", "==", gameId);
-          query = query.orderBy("score", "desc");
-          const snapshot = await query.limit(limit).get();
-          const data = [];
-          snapshot.forEach(doc => {
-            const row = doc.data();
-            data.push({
-              name: row.name,
-              score: row.score,
-              date: row.date || ''
-            });
-          });
+          const snapshot = await db
+            .collection(LEADERBOARD_COLLECTION)
+            .where("gameId", "==", gameId)
+            .orderBy("score", "desc")
+            .limit(limit)
+            .get();
+
+          const data = normalizeLeaderboardSnapshot(snapshot, gameId, limit);
+          console.log('[排行榜] Firebase 讀取成功', { gameId, count: data.length, mode: 'indexed-query' });
           return data;
-        } catch (e) {
-          console.warn("Firestore 讀取失敗，降級本地", e);
-          return getLeaderboardFromLocal(gameId, limit);
+        } catch (indexedError) {
+          console.warn('[排行榜] 排序查詢失敗，改用前端排序讀取。通常是 Firestore 複合索引尚未部署或還在建立。', indexedError);
+
+          try {
+            const snapshot = await db
+              .collection(LEADERBOARD_COLLECTION)
+              .where("gameId", "==", gameId)
+              .get();
+
+            const data = normalizeLeaderboardSnapshot(snapshot, gameId, limit);
+            console.log('[排行榜] Firebase 讀取成功', { gameId, count: data.length, mode: 'client-sort-fallback' });
+            return data;
+          } catch (fallbackError) {
+            console.error('[排行榜] Firebase 讀取完全失敗，降級本地', fallbackError);
+            return getLeaderboardFromLocal(gameId, limit);
+          }
         }
       } else {
         return getLeaderboardFromLocal(gameId, limit);
+      }
+    }
+
+    function normalizeLeaderboardSnapshot(snapshot, gameId, limit = 10) {
+      const data = [];
+      snapshot.forEach(doc => {
+        const row = doc.data() || {};
+        // 支援新欄位 gameId，也相容舊版 leaderboard.js 的 game 欄位。
+        const rowGameId = row.gameId || row.game;
+        if (rowGameId && rowGameId !== gameId) return;
+        data.push({
+          name: row.name || '無名英雄',
+          score: Number(row.score) || 0,
+          date: row.date || formatFirestoreDate(row.timestamp) || formatFirestoreDate(row.createdAt) || ''
+        });
+      });
+      data.sort((a, b) => b.score - a.score);
+      return data.slice(0, limit);
+    }
+
+    function formatFirestoreDate(value) {
+      try {
+        let d = null;
+        if (!value) return '';
+        if (typeof value.toDate === 'function') d = value.toDate();
+        else if (typeof value === 'string') d = new Date(value);
+        if (!d || Number.isNaN(d.getTime())) return '';
+        return d.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      } catch (e) {
+        return '';
       }
     }
 
@@ -1886,14 +2009,24 @@
         saveBtn.innerText = '儲存中...';
         saveBtn.disabled = true;
 
-        await submitGameScore(activeGameId, name, score);
-        
+        const saveResult = await submitGameScore(activeGameId, name, score);
         await renderTheaterLeaderboardWidget(activeGameId);
-        regBox.classList.remove('active');
-        triggerConfetti();
+        if (saveResult && saveResult.mode === 'firebase') {
+          saveBtn.innerText = '雲端已儲存 ✓';
+          regBox.classList.remove('active');
+          triggerConfetti();
+          setTimeout(() => {
+            saveBtn.innerText = '儲存分數';
+            saveBtn.disabled = false;
+          }, 900);
+        } else {
+          const errMsg = saveResult && saveResult.error ? (saveResult.error.code || saveResult.error.message || '未知錯誤') : '未知錯誤';
+          saveBtn.innerText = '已存本機，雲端失敗 ⚠';
+          alert(`Firebase 沒有寫入成功，已暫存本機。錯誤：${errMsg}
 
-        saveBtn.innerText = '儲存分數';
-        saveBtn.disabled = false;
+請打開 Console 查看 [排行榜] 訊息，並確認 Firestore rules 是否已部署。`);
+          saveBtn.disabled = false;
+        }
       };
 
       regBox.classList.add('active');
@@ -3042,6 +3175,14 @@
       setTimeout(() => { confettiContainer.innerHTML = ''; }, 3500);
     }
 
+    // 在瀏覽器 Console 可執行：testFirebaseWrite('tank', 123)
+    // 用來快速確認 Firestore 寫入權限與連線是否正常。
+    window.testFirebaseWrite = async function(gameId = 'tank', score = 123) {
+      const result = await submitGameScore(gameId, '測試玩家', Number(score) || 123);
+      console.log('[排行榜] testFirebaseWrite 結果：', result);
+      return result;
+    };
+
     window.addEventListener('resize', () => {
       if (activeGameId === 'snake' && snakeActive) drawSnakeFrame();
       if (activeGameId === 'dino' && dinoActive) drawDinoFrame();
@@ -3054,9 +3195,1431 @@
     });
     
   </script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-  <script src="leaderboard.js"></script>
+<script>
+/* =====================================================
+   5 Games + Firebase Votes Add-on
+   ===================================================== */
+const ALL_GAMES = [
+  { id: 'tank', badge: '🛡️', title: '坦克大作戰', fullTitle: '坦克大作戰 (Tank Battle)', genre: '街機射擊', tag: '街機射擊', scoreLabel: '坦克得分:', scoreUnit: '分', bannerTag: '精選射擊大作', bannerTitle: '賽博坦克大作戰 (Tank)', bannerDesc: '控制你的發光藍色玩家坦克，射擊並躲避摧毀紅色敵方坦克，挑戰最高生存得分！' },
+  { id: 'snake', badge: '🐍', title: '經典貪吃蛇', fullTitle: '經典貪吃蛇 - 雙蘋果版', genre: '街機雙果', tag: '街機操作', scoreLabel: '當前分數:', scoreUnit: '分', bannerTag: '經典街機回歸', bannerTitle: '經典貪吃蛇 (雙蘋果版)', bannerDesc: '畫面中將同時出現兩顆能量紅蘋果！極速吞食蘋果增長身體，挑戰最高分。' },
+  { id: 'dino', badge: '🦖', title: '小恐龍快跑', fullTitle: '小恐龍快跑 - 大畫面版', genre: '大寬幅生存', tag: '反應閃避', scoreLabel: '奔跑距離:', scoreUnit: '分', bannerTag: '懷舊像素跑酷', bannerTitle: '小恐龍快跑 (大畫面版)', bannerDesc: '在大畫布荒漠中跳躍躲避仙人掌，挑戰最高奔跑距離與極限反應！' },
+  { id: 'airhockey', badge: '🏒', title: '雷射桌上曲棍球', fullTitle: '雷射桌上曲棍球', genre: '雷射對戰', tag: '即時對戰', scoreLabel: '勝利分數:', scoreUnit: '分', bannerTag: '全新雷射對戰', bannerTitle: '雷射桌上曲棍球', bannerDesc: '拖曳藍色雷射擊槌反彈能量球，先攻破 AI 球門 5 次即可登錄勝利分數。' },
+  { id: 'blackjack', badge: '🃏', title: '21點連勝挑戰', fullTitle: '21點連勝挑戰', genre: '連勝卡牌', tag: '連勝挑戰', scoreLabel: '連勝次數:', scoreUnit: '連勝', bannerTag: '全新連勝挑戰', bannerTitle: '21點連勝挑戰', bannerDesc: '無下注、無籌碼版本。只記錄連續擊敗莊家的最高連勝次數。' }
+];
+function gameMeta(gameId) { return ALL_GAMES.find(g => g.id === gameId) || ALL_GAMES[0]; }
+function getGameTitle(gameId) { return gameMeta(gameId).title; }
+function getScoreUnit(gameId) { return gameMeta(gameId).scoreUnit || '分'; }
+function scoreText(gameId, score) { return `${Number(score) || 0} ${getScoreUnit(gameId)}`; }
+function ensureFiveGameDom() {
+  document.querySelectorAll('.btn-clear-leaderboard').forEach(btn => btn.closest('div')?.remove());
+  const sidebarMenu = document.querySelector('.sidebar-menu');
+  if (sidebarMenu && !document.querySelector('.menu-item-btn[data-target="game-airhockey"]')) {
+    const leaderLi = sidebarMenu.querySelector('.menu-item-btn[data-target="view-leaderboard"]')?.closest('li');
+    const html = `<li><button class="menu-item-btn" data-target="game-airhockey" onclick="loadGameInTheater('game-airhockey')"><span class="menu-icon">🏒</span><span>雷射桌上曲棍球</span></button></li><li><button class="menu-item-btn" data-target="game-blackjack" onclick="loadGameInTheater('game-blackjack')"><span class="menu-icon">🃏</span><span>21點連勝挑戰</span></button></li>`;
+    leaderLi ? leaderLi.insertAdjacentHTML('beforebegin', html) : sidebarMenu.insertAdjacentHTML('beforeend', html);
+  }
+  const mobileNav = document.querySelector('.mobile-nav-bar');
+  if (mobileNav && !document.querySelector('.mobile-nav-btn[data-target="game-airhockey"]')) {
+    const leaderBtn = mobileNav.querySelector('.mobile-nav-btn[data-target="view-leaderboard"]');
+    const html = `<button class="mobile-nav-btn" data-target="game-airhockey" onclick="loadGameInTheater('game-airhockey')"><span class="mobile-icon">🏒</span><span>曲棍球</span></button><button class="mobile-nav-btn" data-target="game-blackjack" onclick="loadGameInTheater('game-blackjack')"><span class="mobile-icon">🃏</span><span>21點</span></button>`;
+    leaderBtn ? leaderBtn.insertAdjacentHTML('beforebegin', html) : mobileNav.insertAdjacentHTML('beforeend', html);
+  }
+  const grid = document.querySelector('.game-grid');
+  if (grid && !document.querySelector('.game-card[data-game="airhockey"]')) {
+    grid.insertAdjacentHTML('beforeend', `<div class="game-card" data-game="airhockey" onclick="loadGameInTheater('game-airhockey')"><div class="card-thumb"><span class="card-thumb-badge">🏒</span><div class="game-card-tags"><span class="card-tag tag-new">New</span><span class="card-tag" style="background:#06b6d4;">對戰</span></div></div><div class="card-info"><div><h4 class="card-title">雷射桌上曲棍球</h4><p class="card-desc">操控藍色雷射擊槌，反彈能量球突破 AI 防線。先拿到 5 分即結算排行榜。</p></div><div class="card-meta"><span class="meta-likes" id="card-likes-airhockey">👍 讀取中...</span><span>⚡ Laser Match</span></div></div></div><div class="game-card" data-game="blackjack" onclick="loadGameInTheater('game-blackjack')"><div class="card-thumb"><span class="card-thumb-badge">🃏</span><div class="game-card-tags"><span class="card-tag tag-new">New</span><span class="card-tag" style="background:#fbbf24; color:#111827;">連勝</span></div></div><div class="card-info"><div><h4 class="card-title">21點連勝挑戰</h4><p class="card-desc">無籌碼、無下注版本。只記錄連續擊敗莊家的最高連勝次數，挑戰最長連勝。</p></div><div class="card-meta"><span class="meta-likes" id="card-likes-blackjack">👍 讀取中...</span><span>🃏 Streak Mode</span></div></div></div>`);
+  }
+  const viewport = document.querySelector('.game-viewport');
+  if (viewport && !document.getElementById('wrap-airhockey')) {
+    viewport.insertAdjacentHTML('beforeend', `<div class="game-wrap" id="wrap-airhockey"><div class="game-overlay" id="overlay-airhockey"><h3 class="overlay-title">雷射桌上曲棍球</h3><p class="overlay-desc">拖曳滑鼠或觸控移動藍色擊槌，將能量球打進對方球門。先到 5 分結算。</p><button class="btn-overlay-action airhockey-overlay-btn" onclick="startActiveGame('airhockey')">開始對戰</button></div><div id="airhockey-game-wrapper"><canvas id="airhockey-canvas" width="640" height="360"></canvas></div></div><div class="game-wrap" id="wrap-blackjack"><div class="game-overlay" id="overlay-blackjack"><h3 class="overlay-title">21點連勝挑戰</h3><p class="overlay-desc">無下注版本：抽牌接近 21 點並擊敗莊家。排行榜只記錄連勝次數。</p><button class="btn-overlay-action blackjack-overlay-btn" onclick="startActiveGame('blackjack')">開始挑戰</button></div><div id="blackjack-game-wrapper"><div id="blackjack-table"><div class="bj-status" id="bj-status">準備開始 21 點連勝挑戰</div><div class="bj-row"><div class="bj-label"><span>莊家 Dealer</span><strong id="bj-dealer-total">?</strong></div><div class="bj-cards" id="bj-dealer-cards"></div></div><div class="bj-row"><div class="bj-label"><span>玩家 Player</span><strong id="bj-player-total">0</strong></div><div class="bj-cards" id="bj-player-cards"></div></div><div class="bj-row"><div class="bj-label"><span>目前連勝</span><strong id="bj-current-streak">0</strong></div><div class="bj-label"><span>本次最佳</span><strong id="bj-best-streak">0</strong></div></div><div class="bj-controls"><button id="bj-hit-btn" onclick="blackjackHit()">抽牌 Hit</button><button id="bj-stand-btn" onclick="blackjackStand()">停牌 Stand</button><button id="bj-next-btn" onclick="blackjackNextRound()">下一局</button></div></div></div></div>`);
+    setupAirHockeyCanvas();
+  }
+  const sel = document.getElementById('full-leaderboard-select');
+  if (sel && !sel.querySelector('option[value="airhockey"]')) sel.insertAdjacentHTML('beforeend', `<option value="airhockey">🏒 雷射桌上曲棍球 (勝利分數)</option><option value="blackjack">🃏 21點連勝挑戰 (連勝次數)</option>`);
+}
+function updateNavSelection(targetId) { document.querySelectorAll('.menu-item-btn, .mobile-nav-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-target') === targetId)); }
+function stopAllGameLoops() { if (tankTimer) { cancelAnimationFrame(tankTimer); tankTimer = null; } tankActive = false; if (snakeTimer) { clearInterval(snakeTimer); snakeTimer = null; } snakeActive = false; if (dinoAnimId) { cancelAnimationFrame(dinoAnimId); dinoAnimId = null; } dinoActive = false; stopAirHockeyLoop(); blackjackActive = false; }
+function loadGameInTheater(gameId) { ensureFiveGameDom(); activeGameId = gameId.replace('game-', ''); updateNavSelection(`game-${activeGameId}`); switchView('view-game'); document.querySelectorAll('.game-wrap').forEach(w => w.classList.remove('active')); const wrap = document.getElementById(`wrap-${activeGameId}`); if (wrap) wrap.classList.add('active'); document.querySelectorAll('.game-overlay').forEach(o => o.classList.remove('hidden')); updateTheaterDetailsPanel(activeGameId); document.getElementById('widget-leaderboard-title').innerText = `${getGameTitle(activeGameId)} 排行榜`; renderTheaterLeaderboardWidget(activeGameId); renderRecommendedWidget(activeGameId); }
+function startActiveGame(gameType) { ensureFiveGameDom(); const overlay = document.getElementById(`overlay-${gameType}`); if (overlay) overlay.classList.add('hidden'); if (gameType === 'tank') initTankGame(); else if (gameType === 'snake') resetSnakeGame(); else if (gameType === 'dino') resetDinoGame(); else if (gameType === 'airhockey') resetAirHockeyGame(); else if (gameType === 'blackjack') resetBlackjackGame(); }
+function updateTheaterDetailsPanel(gameId) { const meta = gameMeta(gameId); document.getElementById('details-game-title').innerText = meta.fullTitle; document.getElementById('details-game-tag').innerText = meta.tag; document.getElementById('details-score-label').innerText = meta.scoreLabel; const desc = document.getElementById('details-game-desc'), guide = document.getElementById('details-controls-guide'); if (gameId === 'airhockey') { desc.innerText = '控制藍色雷射擊槌，只能在己方半場移動。把能量球打進 AI 球門得分，先達 5 分會結算勝利分數並可登錄排行榜。'; guide.innerHTML = `<div class="guide-item"><span class="kbd-btn">滑鼠 / 觸控</span><span>拖曳控制擊槌</span></div><div class="guide-item"><span class="kbd-btn">先到 5 分</span><span>結算勝利分數</span></div>`; theaterScoreVal.innerText = airScore ? airScore.player : 0; } else if (gameId === 'blackjack') { desc.innerText = '無下注、無籌碼 21 點。A 可作 1 或 11，J/Q/K 為 10。只記錄連續擊敗莊家的最高連勝次數，平手不增加也不中斷。'; guide.innerHTML = `<div class="guide-item"><span class="kbd-btn">抽牌</span><span>補牌接近 21 點</span></div><div class="guide-item"><span class="kbd-btn">停牌</span><span>讓莊家補牌並比大小</span></div>`; theaterScoreVal.innerText = bjBestStreak || 0; } else if (gameId === 'tank') { desc.innerText = '控制您的發光藍色玩家坦克，在賽博網格戰場中閃避並開火擊毀紅色的敵方坦克。您共有 3 點生命值，看誰能堅持得最久！'; guide.innerHTML = `<div class="guide-item"><span class="kbd-btn">W / A / S / D</span><span>或方向鍵控制移動</span></div><div class="guide-item"><span class="kbd-btn">Space 空白鍵</span><span>或滑鼠左鍵雷射開火</span></div>`; } else if (gameId === 'snake') { desc.innerText = '控制發光的綠色貪吃蛇，吞吃紅色蘋果能量。每吃掉一個蘋果蛇身即增長一節，撞牆或撞擊自己則遊戲結束。'; guide.innerHTML = `<div class="guide-item"><span class="kbd-btn">W / A / S / D</span><span>或方向鍵控制方向</span></div><div class="guide-item"><span class="kbd-btn">螢幕方向鍵</span><span>手機觸控操控</span></div>`; } else if (gameId === 'dino') { desc.innerText = '仙人掌障礙物會隨著時間移動得越來越快。看準時機按下跳躍鍵，跨越障礙挑戰最高距離分數！'; guide.innerHTML = `<div class="guide-item"><span class="kbd-btn">Space 空白鍵</span><span>或 W 跳躍</span></div><div class="guide-item"><span class="kbd-btn">點擊畫布</span><span>手機點碰跳躍</span></div>`; } updateVotingWidget(gameId); }
+function renderRecommendedWidget(currentGameId) { const container = document.getElementById('widget-recommended-list'); container.innerHTML = ''; ALL_GAMES.filter(g => g.id !== currentGameId).sort(() => Math.random() - 0.5).slice(0, 3).forEach(g => { const card = document.createElement('div'); card.className = 'rec-card'; card.onclick = () => loadGameInTheater(`game-${g.id}`); card.innerHTML = `<span class="rec-card-badge">${g.badge}</span><div><div class="rec-card-title">${g.title}</div><div class="rec-card-genre">${g.genre}</div></div>`; container.appendChild(card); }); }
+function randomizeFeaturedBanner() { const banner = ALL_GAMES[Math.floor(Math.random() * ALL_GAMES.length)]; const bannerTag = document.querySelector('.featured-banner .banner-tag'), bannerTitle = document.querySelector('.featured-banner .banner-title'), bannerDesc = document.querySelector('.featured-banner .banner-desc'), bannerBtn = document.querySelector('.featured-banner .btn-banner-play'); if (bannerTag) bannerTag.innerText = banner.bannerTag; if (bannerTitle) bannerTitle.innerText = banner.bannerTitle; if (bannerDesc) bannerDesc.innerText = banner.bannerDesc; if (bannerBtn) bannerBtn.onclick = () => loadGameInTheater(`game-${banner.id}`); }
+async function renderFullLeaderboard() { const gameId = document.getElementById('full-leaderboard-select').value; fullTbody.innerHTML = ''; fullEmpty.style.display = 'block'; fullEmpty.innerText = '英雄榜同步中...'; fullTable.style.display = 'none'; const data = await getGameLeaderboard(gameId, 10); if (data.length === 0) { fullEmpty.style.display = 'block'; fullEmpty.innerText = '目前尚無紀錄，快來搶下頭名寶座！'; fullTable.style.display = 'none'; return; } fullEmpty.style.display = 'none'; fullTable.style.display = 'table'; data.forEach((row, idx) => { const tr = document.createElement('tr'); const rank = idx + 1; let rankClass = 'full-rank'; if (rank === 1) rankClass += ' full-rank-1'; else if (rank === 2) rankClass += ' full-rank-2'; else if (rank === 3) rankClass += ' full-rank-3'; tr.innerHTML = `<td class="${rankClass}">#${rank}</td><td style="font-weight: 600;">${escapeHtml(row.name)}</td><td style="text-align: right; font-weight: 700; font-family: 'Outfit';">${scoreText(gameId, row.score)}</td><td style="text-align: right; color: var(--text-muted); font-size: 0.85rem;">${row.date}</td>`; fullTbody.appendChild(tr); }); }
+async function renderTheaterLeaderboardWidget(gameId) { const container = document.getElementById('widget-leaderboard-list'); container.innerHTML = '<div style="color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 10px 0;">排行讀取中...</div>'; const list = await getGameLeaderboard(gameId, 5); container.innerHTML = ''; if (list.length === 0) { container.innerHTML = '<div style="color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 10px 0;">尚無紀錄</div>'; return; } list.forEach((row, idx) => { const div = document.createElement('div'); div.className = 'widget-rank-row' + (idx === 0 ? ' highlight' : ''); div.innerHTML = `<span class="widget-rank-num">#${idx + 1}</span><span class="widget-rank-name">${escapeHtml(row.name)}</span><span class="widget-rank-score">${scoreText(gameId, row.score)}</span>`; container.appendChild(div); }); }
+async function fetchVoteData(gameId) { const fallback = { likes: 0, dislikes: 0 }; if (!useFirebase || !db) return fallback; try { const doc = await db.collection('arcade_votes').doc(gameId).get(); if (!doc.exists) { await db.collection('arcade_votes').doc(gameId).set({ gameId, likes: 0, dislikes: 0, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }); return fallback; } const d = doc.data() || {}; return { likes: Number(d.likes) || 0, dislikes: Number(d.dislikes) || 0 }; } catch (e) { console.warn('[評分] Firebase 讀取失敗', e); return fallback; } }
+function getLocalVote(gameId) { return localStorage.getItem(`cyber_arcade_vote_${gameId}`); }
+function setLocalVote(gameId, vote) { vote ? localStorage.setItem(`cyber_arcade_vote_${gameId}`, vote) : localStorage.removeItem(`cyber_arcade_vote_${gameId}`); }
+async function submitUserVote(voteType) { if (!activeGameId || !useFirebase || !db) return; const gameId = activeGameId, previous = getLocalVote(gameId); let nextVote = voteType; if (previous === voteType) nextVote = null; try { await db.runTransaction(async tx => { const ref = db.collection('arcade_votes').doc(gameId); const snap = await tx.get(ref); const cur = snap.exists ? (snap.data() || {}) : {}; let likes = Number(cur.likes) || 0, dislikes = Number(cur.dislikes) || 0; if (previous === 'like') likes = Math.max(0, likes - 1); if (previous === 'dislike') dislikes = Math.max(0, dislikes - 1); if (nextVote === 'like') likes += 1; if (nextVote === 'dislike') dislikes += 1; tx.set(ref, { gameId, likes, dislikes, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }); }); setLocalVote(gameId, nextVote); await updateVotingWidget(gameId); await renderAllLikeRates(); } catch (e) { console.error('[評分] Firebase 寫入失敗', e); alert(`評分寫入 Firebase 失敗：${e.code || e.message || 'unknown'}`); } }
+async function updateVotingWidget(gameId) { const data = await fetchVoteData(gameId), total = data.likes + data.dislikes, rate = total > 0 ? ((data.likes / total) * 100).toFixed(1) : '0.0', userVote = getLocalVote(gameId); const likeCountEl = document.getElementById('like-count'), dislikeCountEl = document.getElementById('dislike-count'), likesRateEl = document.getElementById('details-game-likes'), btnLike = document.getElementById('btn-like'), btnDislike = document.getElementById('btn-dislike'); if (likeCountEl) likeCountEl.innerText = data.likes; if (dislikeCountEl) dislikeCountEl.innerText = data.dislikes; if (likesRateEl) likesRateEl.innerText = `${rate}% 喜歡`; if (btnLike && btnDislike) { btnLike.style.color = userVote === 'like' ? 'var(--neon-green)' : 'var(--text-muted)'; btnLike.style.textShadow = userVote === 'like' ? '0 0 8px var(--neon-green-glow)' : 'none'; btnDislike.style.color = userVote === 'dislike' ? 'var(--neon-rose)' : 'var(--text-muted)'; btnDislike.style.textShadow = userVote === 'dislike' ? '0 0 8px var(--neon-rose-glow)' : 'none'; } }
+async function renderAllLikeRates() { for (const g of ALL_GAMES) { const data = await fetchVoteData(g.id), total = data.likes + data.dislikes, rate = total > 0 ? ((data.likes / total) * 100).toFixed(1) : '0.0'; const cardEl = document.getElementById(`card-likes-${g.id}`); if (cardEl) cardEl.innerText = `👍 ${rate}% 喜歡`; } }
+let airCanvas = null, ctxAir = null, airActive = false, airAnimId = null, airPaddle, airAI, airPuck, airScore;
+function setupAirHockeyCanvas() { airCanvas = document.getElementById('airhockey-canvas'); ctxAir = airCanvas ? airCanvas.getContext('2d') : null; if (airCanvas && !airCanvas.dataset.bound) { airCanvas.dataset.bound = '1'; airCanvas.addEventListener('mousemove', e => moveAirPaddle(e.clientX, e.clientY)); airCanvas.addEventListener('mousedown', e => moveAirPaddle(e.clientX, e.clientY)); airCanvas.addEventListener('touchmove', e => { if (e.touches[0]) moveAirPaddle(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }); airCanvas.addEventListener('touchstart', e => { if (e.touches[0]) moveAirPaddle(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }); } }
+function resetAirHockeyGame() { setupAirHockeyCanvas(); stopAllGameLoops(); closeSubmitWidget(); airPaddle = { x: 160, y: 180, r: 24 }; airAI = { x: 480, y: 180, r: 24 }; airPuck = { x: 320, y: 180, vx: (Math.random() > .5 ? 4 : -4), vy: 2.5, r: 12 }; airScore = { player: 0, ai: 0 }; theaterScoreVal.innerText = 0; airActive = true; airAnimId = requestAnimationFrame(airHockeyLoop); }
+function stopAirHockeyLoop() { if (airAnimId) cancelAnimationFrame(airAnimId); airAnimId = null; airActive = false; }
+function moveAirPaddle(clientX, clientY) { if (!airCanvas || !airActive) return; const rect = airCanvas.getBoundingClientRect(); const x = (clientX - rect.left) * (airCanvas.width / rect.width), y = (clientY - rect.top) * (airCanvas.height / rect.height); airPaddle.x = Math.max(airPaddle.r, Math.min(airCanvas.width / 2 - airPaddle.r, x)); airPaddle.y = Math.max(airPaddle.r, Math.min(airCanvas.height - airPaddle.r, y)); }
+function airHockeyLoop() { if (!airActive || !ctxAir) return; airAI.y += (airPuck.y - airAI.y) * 0.065; airAI.x += ((airPuck.x > 330 ? 500 : 560) - airAI.x) * 0.03; airAI.y = Math.max(airAI.r, Math.min(airCanvas.height - airAI.r, airAI.y)); airAI.x = Math.max(airCanvas.width / 2 + airAI.r, Math.min(airCanvas.width - airAI.r, airAI.x)); airPuck.x += airPuck.vx; airPuck.y += airPuck.vy; if (airPuck.y < airPuck.r || airPuck.y > airCanvas.height - airPuck.r) airPuck.vy *= -1; collidePuckPaddle(airPaddle, 1); collidePuckPaddle(airAI, -1); if (airPuck.x < -airPuck.r) { airScore.ai++; resetAirPuck(-1); } if (airPuck.x > airCanvas.width + airPuck.r) { airScore.player++; theaterScoreVal.innerText = airScore.player; resetAirPuck(1); } drawAirHockey(); if (airScore.player >= 5 || airScore.ai >= 5) return endAirHockeyGame(); airAnimId = requestAnimationFrame(airHockeyLoop); }
+function collidePuckPaddle(p, dir) { const dx = airPuck.x - p.x, dy = airPuck.y - p.y, dist = Math.sqrt(dx*dx + dy*dy); if (dist < airPuck.r + p.r) { const nx = dx / (dist || 1), ny = dy / (dist || 1), speed = Math.min(8.5, Math.sqrt(airPuck.vx**2 + airPuck.vy**2) + 0.55); airPuck.vx = Math.abs(nx * speed) * dir; airPuck.vy = ny * speed + (Math.random() - .5) * 1.2; airPuck.x = p.x + nx * (airPuck.r + p.r + 1); airPuck.y = p.y + ny * (airPuck.r + p.r + 1); } }
+function resetAirPuck(dir) { airPuck.x = 320; airPuck.y = 180; airPuck.vx = 4 * dir; airPuck.vy = (Math.random() - .5) * 4; }
+function drawAirHockey() { ctxAir.fillStyle = '#050816'; ctxAir.fillRect(0,0,airCanvas.width,airCanvas.height); ctxAir.strokeStyle = 'rgba(6,182,212,.35)'; ctxAir.lineWidth = 3; ctxAir.beginPath(); ctxAir.moveTo(320,0); ctxAir.lineTo(320,360); ctxAir.stroke(); ctxAir.strokeStyle = 'rgba(255,255,255,.08)'; ctxAir.strokeRect(2,2,636,356); ctxAir.fillStyle = 'rgba(6,182,212,.18)'; ctxAir.fillRect(0,130,8,100); ctxAir.fillStyle = 'rgba(244,63,94,.18)'; ctxAir.fillRect(632,130,8,100); ctxAir.font = '900 34px Outfit'; ctxAir.fillStyle = '#fff'; ctxAir.fillText(`${airScore.player}`, 260, 48); ctxAir.fillText(`${airScore.ai}`, 360, 48); drawAirCircle(airPuck.x, airPuck.y, airPuck.r, '#fbbf24', '#fbbf24'); drawAirCircle(airPaddle.x, airPaddle.y, airPaddle.r, '#06b6d4', '#06b6d4'); drawAirCircle(airAI.x, airAI.y, airAI.r, '#f43f5e', '#f43f5e'); }
+function drawAirCircle(x,y,r,color,glow) { ctxAir.save(); ctxAir.shadowBlur = 18; ctxAir.shadowColor = glow; ctxAir.fillStyle = color; ctxAir.beginPath(); ctxAir.arc(x,y,r,0,Math.PI*2); ctxAir.fill(); ctxAir.restore(); }
+function endAirHockeyGame() { stopAirHockeyLoop(); const won = airScore.player > airScore.ai, finalScore = won ? (airScore.player * 100 + (5 - airScore.ai) * 25) : Math.max(0, airScore.player * 50); const overlay = document.getElementById('overlay-airhockey'); overlay.querySelector('.overlay-title').innerText = won ? '🏒 雷射勝利！' : '💥 AI 獲勝'; overlay.querySelector('.overlay-title').className = won ? 'overlay-title game-win' : 'overlay-title game-over'; overlay.querySelector('.overlay-desc').innerText = `比數 ${airScore.player}:${airScore.ai}，排行榜分數：${finalScore} 分。`; overlay.querySelector('.btn-overlay-action').innerText = '再戰一場'; overlay.classList.remove('hidden'); triggerGameEndSettlement(finalScore); }
+let blackjackActive = false, bjDeck = [], bjPlayer = [], bjDealer = [], bjCurrentStreak = 0, bjBestStreak = 0, bjRoundOver = false;
+function resetBlackjackGame() { stopAllGameLoops(); closeSubmitWidget(); blackjackActive = true; bjCurrentStreak = 0; bjBestStreak = 0; blackjackNextRound(); }
+function buildDeck() { const suits=['♠','♥','♦','♣'], ranks=['A','2','3','4','5','6','7','8','9','10','J','Q','K']; bjDeck=[]; suits.forEach(s=>ranks.forEach(r=>bjDeck.push({r,s}))); for(let i=bjDeck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [bjDeck[i],bjDeck[j]]=[bjDeck[j],bjDeck[i]];} }
+function drawCard(){ if(bjDeck.length<10) buildDeck(); return bjDeck.pop(); }
+function cardValue(c){ if(c.r==='A') return 11; if(['J','Q','K'].includes(c.r)) return 10; return Number(c.r); }
+function handValue(hand){ let total=hand.reduce((s,c)=>s+cardValue(c),0); let aces=hand.filter(c=>c.r==='A').length; while(total>21 && aces>0){ total-=10; aces--; } return total; }
+function blackjackNextRound(){ if(!blackjackActive) blackjackActive=true; if(bjDeck.length<10) buildDeck(); bjPlayer=[drawCard(),drawCard()]; bjDealer=[drawCard(),drawCard()]; bjRoundOver=false; setBjStatus('選擇抽牌或停牌'); renderBlackjack(); }
+function blackjackHit(){ if(!blackjackActive || bjRoundOver) return; bjPlayer.push(drawCard()); if(handValue(bjPlayer)>21) finishBlackjackRound('lose'); else renderBlackjack(); }
+function blackjackStand(){ if(!blackjackActive || bjRoundOver) return; while(handValue(bjDealer)<17) bjDealer.push(drawCard()); const p=handValue(bjPlayer), d=handValue(bjDealer); if(d>21 || p>d) finishBlackjackRound('win'); else if(p===d) finishBlackjackRound('push'); else finishBlackjackRound('lose'); }
+function finishBlackjackRound(result){ bjRoundOver=true; if(result==='win'){ bjCurrentStreak++; bjBestStreak=Math.max(bjBestStreak,bjCurrentStreak); setBjStatus(`勝利！目前 ${bjCurrentStreak} 連勝，按「下一局」繼續。`); } else if(result==='push'){ setBjStatus(`平手，連勝維持 ${bjCurrentStreak}。按「下一局」繼續。`); } else { setBjStatus(`失敗，連勝中斷。本次最佳 ${bjBestStreak} 連勝。`); blackjackActive=false; triggerGameEndSettlement(bjBestStreak); } theaterScoreVal.innerText = bjBestStreak; renderBlackjack(); }
+function setBjStatus(t){ const el=document.getElementById('bj-status'); if(el) el.innerText=t; }
+function renderBlackjack(){ const dealerCards=document.getElementById('bj-dealer-cards'), playerCards=document.getElementById('bj-player-cards'); if(!dealerCards||!playerCards) return; dealerCards.innerHTML=''; playerCards.innerHTML=''; bjDealer.forEach((c,i)=>dealerCards.appendChild(cardEl(c, !bjRoundOver && i===1))); bjPlayer.forEach(c=>playerCards.appendChild(cardEl(c,false))); document.getElementById('bj-player-total').innerText=handValue(bjPlayer); document.getElementById('bj-dealer-total').innerText=(!bjRoundOver && blackjackActive) ? '?' : handValue(bjDealer); document.getElementById('bj-current-streak').innerText=bjCurrentStreak; document.getElementById('bj-best-streak').innerText=bjBestStreak; document.getElementById('bj-hit-btn').disabled=bjRoundOver || !blackjackActive; document.getElementById('bj-stand-btn').disabled=bjRoundOver || !blackjackActive; document.getElementById('bj-next-btn').disabled=!bjRoundOver || !blackjackActive; }
+function cardEl(c,hidden){ const div=document.createElement('div'); div.className='bj-card'; if(hidden){div.innerText='?'; return div;} if(c.s==='♥'||c.s==='♦') div.classList.add('red'); div.innerText=`${c.r}${c.s}`; return div; }
+window.addEventListener('DOMContentLoaded', () => { ensureFiveGameDom(); renderAllLikeRates(); randomizeFeaturedBanner(); });
+</script>
+
+
+<style id="modern-blackjack-style">
+#blackjack-game-wrapper{width:100%;min-height:100%;display:flex;align-items:center;justify-content:center}#blackjack-table.modern-bj-table{width:min(100%,520px);min-height:560px;padding:22px 18px 26px;border:0;border-radius:0;background:#172d3a;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03),0 20px 55px rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;position:relative;overflow:hidden}.modern-bj-title{color:#98a6b8;font-weight:900;font-size:1.05rem;text-align:center}.modern-bj-total-pill{min-width:70px;height:30px;padding:0 16px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-weight:900;color:#fff;background:#405565;box-shadow:inset 0 2px 6px rgba(255,255,255,.07),0 4px 10px rgba(0,0,0,.15)}.modern-bj-total-pill.player{background:#ef1747;box-shadow:0 0 0 3px rgba(239,23,71,.18),0 8px 18px rgba(239,23,71,.2)}.modern-bj-hand{width:310px;min-height:156px;position:relative;margin:2px auto 8px}.modern-bj-hand.player-hand{width:230px;min-height:158px;margin-bottom:10px}.modern-bj-card{position:absolute;width:84px;height:126px;border-radius:7px;background:#f9fbff;color:#0b1b25;border:1px solid rgba(10,20,30,.08);box-shadow:0 8px 14px rgba(0,0,0,.22);display:flex;align-items:flex-start;justify-content:flex-start;padding:9px 10px;font-size:2.1rem;font-weight:950;line-height:1;transform-origin:50% 100%}.modern-bj-card.red{color:#f0184f}.modern-bj-card.hidden-card{color:transparent;background:linear-gradient(135deg,#294759,#102535);border:2px solid rgba(255,255,255,.08)}.modern-bj-card.hidden-card:after{content:'◆';color:rgba(255,255,255,.38);font-size:2.2rem;margin:auto}.modern-bj-card.player-card{border:5px solid #f0184f;box-shadow:0 8px 14px rgba(0,0,0,.26),0 0 0 1px rgba(255,255,255,.2) inset}.modern-bj-card .suit{position:absolute;left:14px;top:44px;font-size:1.8rem}.modern-bj-card.dealing{animation:bjDealIn 520ms cubic-bezier(.2,.75,.25,1.15) both}@keyframes bjDealIn{0%{opacity:0;transform:translate(115px,-145px) rotate(12deg) scale(.72);filter:blur(2px)}55%{opacity:1;filter:blur(0)}100%{opacity:1}}.modern-bj-status{min-height:24px;color:#c2ceda;font-weight:800;font-size:.92rem;text-align:center;margin-top:-2px}.modern-bj-main-btn,.modern-bj-small-btn{border:0;border-radius:7px;font-family:var(--font-sans);cursor:pointer;transition:transform .15s ease,opacity .15s ease,background .15s ease}.modern-bj-main-btn{margin-top:4px;min-width:150px;height:54px;padding:0 20px;background:#071b2a;color:#c1cbd7;font-size:1.02rem;font-weight:950;box-shadow:0 10px 18px rgba(0,0,0,.25);display:inline-flex;align-items:center;justify-content:center}.modern-bj-main-btn:hover{transform:translateY(-1px);background:#092234}.modern-bj-actions{display:flex;gap:10px;margin-top:2px}.modern-bj-small-btn{height:42px;padding:0 18px;background:rgba(255,255,255,.08);color:#fff;font-weight:900;border:1px solid rgba(255,255,255,.08)}.modern-bj-small-btn.hit{background:#ef1747}.modern-bj-small-btn.stand{background:#405565}.modern-bj-main-btn:disabled,.modern-bj-small-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.modern-bj-streak{color:#91a2b5;font-weight:800;font-size:.82rem;text-align:center;margin-top:4px}@media(max-width:768px){#blackjack-table.modern-bj-table{min-height:500px;width:min(100%,360px);transform:scale(.92);transform-origin:center}.modern-bj-hand{width:285px}.modern-bj-card{width:76px;height:114px;font-size:1.9rem}}
+</style>
+
+
+<script id="modern-blackjack-script">
+(function(){
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));const suits=['♠','♥','♦','♣'],ranks=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const bj=window.modernBlackjackState={deck:[],player:[],dealer:[],currentStreak:0,bestStreak:0,roundOver:true,busy:false,revealDealer:false,gameStarted:false,savedThisLoss:false,statusMessage:'按 Play Blackjack 開始'};
+function buildDeck(){bj.deck=[];suits.forEach(s=>ranks.forEach(r=>bj.deck.push({r,s})));for(let i=bj.deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bj.deck[i],bj.deck[j]]=[bj.deck[j],bj.deck[i]]}}
+function draw(){if(bj.deck.length<10)buildDeck();return bj.deck.pop()}function val(c){if(!c)return 0;if(c.r==='A')return 11;if(['J','Q','K'].includes(c.r))return 10;return Number(c.r)}function totals(h){if(!h.length)return[0];let t=h.reduce((s,c)=>s+val(c),0),a=h.filter(c=>c.r==='A').length,set=new Set([t]);while(a>0){t-=10;set.add(t);a--}let arr=[...set];return arr.filter(v=>v<=21).sort((a,b)=>a-b).concat(arr.filter(v=>v>21).sort((a,b)=>a-b)).slice(0,2)}function best(h){const ts=totals(h),ok=ts.filter(v=>v<=21);return ok.length?Math.max(...ok):Math.min(...ts)}function totalText(h,hide){if(hide&&h.length>1)return String(val(h[0]));const ts=totals(h);return(ts.length>1&&ts.some(v=>v<=21))?ts.join(', '):String(best(h))}function red(c){return c&&(c.s==='♥'||c.s==='♦')}
+function card(c,i,owner,hidden,anim){const xs=owner==='dealer'?40:38,ys=owner==='dealer'?24:16,rot=owner==='dealer'?-1+i*1.8:-2+i*2.8,left=owner==='dealer'?18+i*xs:36+i*xs,top=owner==='dealer'?4+i*ys:2+i*10,cls=['modern-bj-card'];if(owner==='player')cls.push('player-card');if(red(c))cls.push('red');if(hidden)cls.push('hidden-card');if(anim)cls.push('dealing');if(hidden)return`<div class="${cls.join(' ')}" style="left:${left}px;top:${top}px;z-index:${i+1};transform:rotate(${rot}deg);"></div>`;return`<div class="${cls.join(' ')}" style="left:${left}px;top:${top}px;z-index:${i+1};transform:rotate(${rot}deg);"><span class="rank">${c.r}</span><span class="suit">${c.s}</span></div>`}
+function ensureDom(){if(typeof ensureFiveGameDom==='function')ensureFiveGameDom();const t=document.getElementById('blackjack-table');if(!t)return null;if(!t.classList.contains('modern-bj-table')){t.className='modern-bj-table';t.innerHTML=`<div class="modern-bj-title">Dealer</div><div class="modern-bj-total-pill" id="modern-bj-dealer-total">0</div><div class="modern-bj-hand dealer-hand" id="modern-bj-dealer-hand"></div><div class="modern-bj-title">Player</div><div class="modern-bj-total-pill player" id="modern-bj-player-total">0</div><div class="modern-bj-hand player-hand" id="modern-bj-player-hand"></div><div class="modern-bj-status" id="modern-bj-status">按 Play Blackjack 開始</div><button class="modern-bj-main-btn" id="modern-bj-play-btn" type="button">Play Blackjack</button><div class="modern-bj-actions" id="modern-bj-actions" style="display:none"><button class="modern-bj-small-btn hit" id="modern-bj-hit-btn" type="button">抽牌 Hit</button><button class="modern-bj-small-btn stand" id="modern-bj-stand-btn" type="button">停牌 Stand</button></div><div class="modern-bj-streak" id="modern-bj-streak">目前 0 連勝｜最佳 0 連勝</div>`;document.getElementById('modern-bj-play-btn').addEventListener('click',()=>window.resetBlackjackGame());document.getElementById('modern-bj-hit-btn').addEventListener('click',()=>window.blackjackHit());document.getElementById('modern-bj-stand-btn').addEventListener('click',()=>window.blackjackStand())}return t}
+function render(anim={}){if(!ensureDom())return;document.getElementById('modern-bj-dealer-hand').innerHTML=bj.dealer.map((c,i)=>card(c,i,'dealer',!bj.revealDealer&&i===1,anim.owner==='dealer'&&anim.index===i)).join('');document.getElementById('modern-bj-player-hand').innerHTML=bj.player.map((c,i)=>card(c,i,'player',false,anim.owner==='player'&&anim.index===i)).join('');document.getElementById('modern-bj-dealer-total').innerText=bj.dealer.length?totalText(bj.dealer,!bj.revealDealer&&bj.dealer.length>1):'0';document.getElementById('modern-bj-player-total').innerText=bj.player.length?totalText(bj.player):'0';document.getElementById('modern-bj-status').innerText=bj.statusMessage;document.getElementById('modern-bj-streak').innerText=`目前 ${bj.currentStreak} 連勝｜最佳 ${bj.bestStreak} 連勝`;if(window.theaterScoreVal)theaterScoreVal.innerText=bj.bestStreak;const play=document.getElementById('modern-bj-play-btn'),act=document.getElementById('modern-bj-actions'),hit=document.getElementById('modern-bj-hit-btn'),stand=document.getElementById('modern-bj-stand-btn');play.disabled=bj.busy;hit.disabled=bj.busy||bj.roundOver||!bj.gameStarted;stand.disabled=hit.disabled;act.style.display=(!bj.roundOver&&bj.gameStarted)?'flex':'none';play.style.display=(bj.roundOver||!bj.gameStarted)?'inline-flex':'none'}
+async function deal(owner,c){owner==='dealer'?bj.dealer.push(c):bj.player.push(c);render({owner,index:(owner==='dealer'?bj.dealer.length:bj.player.length)-1});await sleep(560)}
+window.resetBlackjackGame=async function(){ensureDom();closeSubmitWidget();bj.busy=true;bj.roundOver=false;bj.revealDealer=false;bj.gameStarted=true;bj.savedThisLoss=false;bj.player=[];bj.dealer=[];if(bj.deck.length<10)buildDeck();bj.statusMessage='洗牌與發牌中...';render();await sleep(250);await deal('dealer',draw());await deal('player',draw());await deal('dealer',draw());await deal('player',draw());bj.busy=false;bj.statusMessage='選擇抽牌或停牌';render();if(best(bj.player)===21)await window.blackjackStand()}
+window.blackjackHit=async function(){if(bj.busy||bj.roundOver||!bj.gameStarted)return;bj.busy=true;bj.statusMessage='抽牌中...';render();await sleep(320);await deal('player',draw());if(best(bj.player)>21)await finish('lose');else{bj.busy=false;bj.statusMessage='選擇抽牌或停牌';render()}}
+window.blackjackStand=async function(){if(bj.busy||bj.roundOver||!bj.gameStarted)return;bj.busy=true;bj.revealDealer=true;bj.statusMessage='莊家翻牌中...';render();await sleep(620);while(best(bj.dealer)<17){bj.statusMessage='莊家抽牌中...';render();await sleep(360);await deal('dealer',draw())}const p=best(bj.player),d=best(bj.dealer);if(d>21||p>d)await finish('win');else if(p===d)await finish('push');else await finish('lose')}
+async function finish(res){bj.roundOver=true;bj.busy=false;bj.revealDealer=true;if(res==='win'){bj.currentStreak++;bj.bestStreak=Math.max(bj.bestStreak,bj.currentStreak);bj.statusMessage=`勝利！目前 ${bj.currentStreak} 連勝，按 Play Blackjack 繼續。`;triggerConfetti()}else if(res==='push'){bj.statusMessage=`平手，連勝維持 ${bj.currentStreak}，按 Play Blackjack 下一局。`}else{bj.statusMessage=`失敗，連勝中斷。本次最佳 ${bj.bestStreak} 連勝。`;if(!bj.savedThisLoss){bj.savedThisLoss=true;bj.gameStarted=false;triggerGameEndSettlement(bj.bestStreak);bj.currentStreak=0}}render()}
+const oldStart=window.startActiveGame;window.startActiveGame=function(gameType){if(gameType==='blackjack'){ensureDom();const o=document.getElementById('overlay-blackjack');if(o)o.classList.add('hidden');bj.currentStreak=0;bj.bestStreak=0;bj.gameStarted=false;bj.roundOver=true;bj.revealDealer=false;bj.player=[];bj.dealer=[];bj.statusMessage='按 Play Blackjack 開始';render();return}return oldStart?oldStart(gameType):undefined}
+const oldDetails=window.updateTheaterDetailsPanel;window.updateTheaterDetailsPanel=function(gameId){if(typeof oldDetails==='function')oldDetails(gameId);if(gameId==='blackjack'){document.getElementById('details-game-title').innerText='21點連勝挑戰';document.getElementById('details-game-tag').innerText='連勝挑戰';document.getElementById('details-score-label').innerText='連勝次數:';document.getElementById('details-game-desc').innerText='新版 21 點採直式牌桌畫面，抽牌與莊家補牌都有延遲動畫。輸了會跳出分數登錄，但 Play Blackjack 仍可重新開始。';document.getElementById('details-controls-guide').innerHTML=`<div class="guide-item"><span class="kbd-btn">Play Blackjack</span><span>開始或重新開局</span></div><div class="guide-item"><span class="kbd-btn">Hit / Stand</span><span>抽牌或停牌</span></div>`;ensureDom();render()}}
+window.addEventListener('DOMContentLoaded',()=>{if(document.getElementById('blackjack-table')){ensureDom();render()}})
+})();
+</script>
+
+
+<style id="fullscreen-hockey-rating-fix-style">
+.game-viewport.fullscreen-blackjack:fullscreen{background:#172d3a!important}.game-viewport.fullscreen-blackjack:fullscreen #wrap-blackjack,.game-viewport.fullscreen-blackjack:fullscreen #blackjack-game-wrapper{width:100vw!important;height:100vh!important;max-width:100vw!important;max-height:100vh!important;background:#172d3a!important}.game-viewport.fullscreen-blackjack:fullscreen #blackjack-table.modern-bj-table{width:100vw!important;height:100vh!important;min-height:100vh!important;max-width:none!important;border-radius:0!important;background:#172d3a!important;box-shadow:none!important}.rating-widget{gap:14px!important;padding:9px 14px!important;border-radius:14px!important;background:rgba(255,255,255,.075)!important;border:1px solid rgba(255,255,255,.14)!important;box-shadow:0 8px 24px rgba(0,0,0,.22),inset 0 0 0 1px rgba(255,255,255,.035)!important}.rating-widget #btn-like,.rating-widget #btn-dislike{min-width:76px!important;height:42px!important;padding:0 12px!important;border-radius:12px!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.12)!important;font-size:1.05rem!important;font-weight:900!important;justify-content:center!important;color:#e5e7eb!important}.rating-widget #btn-like:hover{background:rgba(16,185,129,.18)!important;border-color:rgba(16,185,129,.45)!important;transform:translateY(-1px)}.rating-widget #btn-dislike:hover{background:rgba(244,63,94,.18)!important;border-color:rgba(244,63,94,.45)!important;transform:translateY(-1px)}.rating-widget #details-game-likes{font-size:.95rem!important;padding:0 4px!important;white-space:nowrap!important}
+</style>
+
+
+<script id="fullscreen-hockey-rating-fix-script">
+(function(){
+const HOCKEY_GOAL_TOP=130,HOCKEY_GOAL_BOTTOM=230,HOCKEY_GOAL_CENTER=(HOCKEY_GOAL_TOP+HOCKEY_GOAL_BOTTOM)/2;
+function updateFullscreenBlackjackClass(){const viewport=document.querySelector('.game-viewport');if(!viewport)return;let currentGame='';try{currentGame=(typeof activeGameId!=='undefined')?activeGameId:(window.activeGameId||'')}catch(e){currentGame=window.activeGameId||''}const isBlackjack=currentGame==='blackjack'||document.getElementById('wrap-blackjack')?.classList.contains('active');viewport.classList.toggle('fullscreen-blackjack',Boolean(document.fullscreenElement&&isBlackjack))}
+document.addEventListener('fullscreenchange',updateFullscreenBlackjackClass);
+const oldToggle=window.toggleViewportFullscreen;window.toggleViewportFullscreen=function(){const r=oldToggle?oldToggle():undefined;setTimeout(updateFullscreenBlackjackClass,60);return r};
+const oldLoad=window.loadGameInTheater;window.loadGameInTheater=function(gameId){const r=oldLoad?oldLoad(gameId):undefined;setTimeout(updateFullscreenBlackjackClass,60);return r};
+function hockeyGoalHit(y){return y>=HOCKEY_GOAL_TOP&&y<=HOCKEY_GOAL_BOTTOM}
+window.airHockeyLoop=function airHockeyLoopGoalOnly(){if(!airActive||!ctxAir)return;airAI.y+=(airPuck.y-airAI.y)*0.065;airAI.x+=((airPuck.x>330?500:560)-airAI.x)*0.03;airAI.y=Math.max(airAI.r,Math.min(airCanvas.height-airAI.r,airAI.y));airAI.x=Math.max(airCanvas.width/2+airAI.r,Math.min(airCanvas.width-airAI.r,airAI.x));airPuck.x+=airPuck.vx;airPuck.y+=airPuck.vy;if(airPuck.y<airPuck.r){airPuck.y=airPuck.r;airPuck.vy=Math.abs(airPuck.vy)}else if(airPuck.y>airCanvas.height-airPuck.r){airPuck.y=airCanvas.height-airPuck.r;airPuck.vy=-Math.abs(airPuck.vy)}collidePuckPaddle(airPaddle,1);collidePuckPaddle(airAI,-1);if(airPuck.x-airPuck.r<=0){if(hockeyGoalHit(airPuck.y)){airScore.ai++;resetAirPuck(-1)}else{airPuck.x=airPuck.r;airPuck.vx=Math.abs(airPuck.vx)}}if(airPuck.x+airPuck.r>=airCanvas.width){if(hockeyGoalHit(airPuck.y)){airScore.player++;theaterScoreVal.innerText=airScore.player;resetAirPuck(1)}else{airPuck.x=airCanvas.width-airPuck.r;airPuck.vx=-Math.abs(airPuck.vx)}}drawAirHockey();if(airScore.player>=5||airScore.ai>=5)return endAirHockeyGame();airAnimId=requestAnimationFrame(window.airHockeyLoop)};
+const oldReset=window.resetAirHockeyGame;window.resetAirHockeyGame=function(){if(oldReset)oldReset();if(airAnimId){cancelAnimationFrame(airAnimId);airAnimId=requestAnimationFrame(window.airHockeyLoop)}};
+window.drawAirHockey=function drawAirHockeyGoalOnly(){ctxAir.fillStyle='#050816';ctxAir.fillRect(0,0,airCanvas.width,airCanvas.height);ctxAir.strokeStyle='rgba(6,182,212,.35)';ctxAir.lineWidth=3;ctxAir.beginPath();ctxAir.moveTo(320,0);ctxAir.lineTo(320,360);ctxAir.stroke();ctxAir.strokeStyle='rgba(255,255,255,.08)';ctxAir.strokeRect(2,2,636,356);ctxAir.fillStyle='rgba(255,255,255,.055)';ctxAir.fillRect(0,0,8,HOCKEY_GOAL_TOP);ctxAir.fillRect(0,HOCKEY_GOAL_BOTTOM,8,airCanvas.height-HOCKEY_GOAL_BOTTOM);ctxAir.fillRect(632,0,8,HOCKEY_GOAL_TOP);ctxAir.fillRect(632,HOCKEY_GOAL_BOTTOM,8,airCanvas.height-HOCKEY_GOAL_BOTTOM);ctxAir.fillStyle='rgba(6,182,212,.24)';ctxAir.fillRect(0,HOCKEY_GOAL_TOP,10,HOCKEY_GOAL_BOTTOM-HOCKEY_GOAL_TOP);ctxAir.fillStyle='rgba(244,63,94,.24)';ctxAir.fillRect(630,HOCKEY_GOAL_TOP,10,HOCKEY_GOAL_BOTTOM-HOCKEY_GOAL_TOP);ctxAir.strokeStyle='rgba(251,191,36,.58)';ctxAir.lineWidth=2;ctxAir.setLineDash([6,6]);ctxAir.beginPath();ctxAir.moveTo(0,HOCKEY_GOAL_TOP);ctxAir.lineTo(18,HOCKEY_GOAL_TOP);ctxAir.moveTo(0,HOCKEY_GOAL_BOTTOM);ctxAir.lineTo(18,HOCKEY_GOAL_BOTTOM);ctxAir.moveTo(622,HOCKEY_GOAL_TOP);ctxAir.lineTo(640,HOCKEY_GOAL_TOP);ctxAir.moveTo(622,HOCKEY_GOAL_BOTTOM);ctxAir.lineTo(640,HOCKEY_GOAL_BOTTOM);ctxAir.stroke();ctxAir.setLineDash([]);ctxAir.font='900 34px Outfit';ctxAir.fillStyle='#fff';ctxAir.fillText(`${airScore.player}`,260,48);ctxAir.fillText(`${airScore.ai}`,360,48);ctxAir.font='800 11px Outfit';ctxAir.fillStyle='rgba(255,255,255,.45)';ctxAir.fillText('GOAL',14,HOCKEY_GOAL_CENTER+4);ctxAir.fillText('GOAL',590,HOCKEY_GOAL_CENTER+4);drawAirCircle(airPuck.x,airPuck.y,airPuck.r,'#fbbf24','#fbbf24');drawAirCircle(airPaddle.x,airPaddle.y,airPaddle.r,'#06b6d4','#06b6d4');drawAirCircle(airAI.x,airAI.y,airAI.r,'#f43f5e','#f43f5e')};
+})();
+</script>
+
+
+<style id="blackjack-height-hockey-countdown-style">
+  /* Blackjack 非全螢幕：加高遊戲視窗，避免底部 Hit / Stand / Play Blackjack 被切到 */
+  .game-viewport.active-blackjack:not(:fullscreen) {
+    min-height: 720px !important;
+    height: 720px !important;
+    aspect-ratio: auto !important;
+    align-items: center !important;
+    overflow: hidden !important;
+  }
+  .game-viewport.active-blackjack:not(:fullscreen) #wrap-blackjack,
+  .game-viewport.active-blackjack:not(:fullscreen) #blackjack-game-wrapper {
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+  .game-viewport.active-blackjack:not(:fullscreen) #blackjack-table.modern-bj-table {
+    min-height: 640px !important;
+    height: 640px !important;
+    transform: none !important;
+  }
+  @media (max-width: 768px) {
+    .game-viewport.active-blackjack:not(:fullscreen) {
+      min-height: 620px !important;
+      height: 620px !important;
+    }
+    .game-viewport.active-blackjack:not(:fullscreen) #blackjack-table.modern-bj-table {
+      min-height: 560px !important;
+      height: 560px !important;
+      transform: scale(.9) !important;
+      transform-origin: center !important;
+    }
+  }
+</style>
+
+
+<script id="blackjack-height-hockey-countdown-script">
+(function () {
+  let hockeyCountdownTimer = null;
+  let hockeyCountdownToken = 0;
+
+  function setBlackjackViewportClass() {
+    const viewport = document.querySelector('.game-viewport');
+    if (!viewport) return;
+    let currentGame = '';
+    try {
+      currentGame = (typeof activeGameId !== 'undefined') ? activeGameId : (window.activeGameId || '');
+    } catch (e) {
+      currentGame = window.activeGameId || '';
+    }
+    const isBlackjack = currentGame === 'blackjack' || document.getElementById('wrap-blackjack')?.classList.contains('active');
+    viewport.classList.toggle('active-blackjack', Boolean(isBlackjack));
+  }
+
+  const previousLoadGameInTheaterForHeight = window.loadGameInTheater;
+  window.loadGameInTheater = function loadGameInTheaterHeightPatched(gameId) {
+    const result = previousLoadGameInTheaterForHeight ? previousLoadGameInTheaterForHeight(gameId) : undefined;
+    setTimeout(setBlackjackViewportClass, 30);
+    return result;
+  };
+
+  const previousSwitchViewForHeight = window.switchView;
+  window.switchView = function switchViewHeightPatched(viewId) {
+    const result = previousSwitchViewForHeight ? previousSwitchViewForHeight(viewId) : undefined;
+    setTimeout(setBlackjackViewportClass, 30);
+    return result;
+  };
+
+  function clearHockeyCountdown() {
+    hockeyCountdownToken++;
+    if (hockeyCountdownTimer) {
+      clearTimeout(hockeyCountdownTimer);
+      hockeyCountdownTimer = null;
+    }
+  }
+
+  function drawHockeyCountdownLabel(label) {
+    if (typeof drawAirHockey === 'function') drawAirHockey();
+    if (!ctxAir || !airCanvas) return;
+    ctxAir.save();
+    ctxAir.fillStyle = 'rgba(0,0,0,0.42)';
+    ctxAir.fillRect(0, 0, airCanvas.width, airCanvas.height);
+    ctxAir.textAlign = 'center';
+    ctxAir.textBaseline = 'middle';
+    ctxAir.font = label === 'GO!' ? '900 68px Outfit' : '900 86px Outfit';
+    ctxAir.fillStyle = label === 'GO!' ? '#10b981' : '#fbbf24';
+    ctxAir.shadowBlur = 22;
+    ctxAir.shadowColor = label === 'GO!' ? '#10b981' : '#fbbf24';
+    ctxAir.fillText(label, airCanvas.width / 2, airCanvas.height / 2 - 6);
+    ctxAir.shadowBlur = 0;
+    ctxAir.font = '800 15px Outfit';
+    ctxAir.fillStyle = 'rgba(255,255,255,0.78)';
+    ctxAir.fillText('準備開始，倒數結束後球才會移動', airCanvas.width / 2, airCanvas.height / 2 + 58);
+    ctxAir.restore();
+  }
+
+  function startHockeyCountdownThenLoop() {
+    clearHockeyCountdown();
+    const token = hockeyCountdownToken;
+    const labels = ['3', '2', '1', 'GO!'];
+    let index = 0;
+    airActive = true;
+    if (airAnimId) {
+      cancelAnimationFrame(airAnimId);
+      airAnimId = null;
+    }
+
+    function step() {
+      if (token !== hockeyCountdownToken) return;
+      if (index < labels.length) {
+        drawHockeyCountdownLabel(labels[index]);
+        index++;
+        hockeyCountdownTimer = setTimeout(step, index === labels.length ? 650 : 900);
+        return;
+      }
+      hockeyCountdownTimer = null;
+      if (token !== hockeyCountdownToken) return;
+      airAnimId = requestAnimationFrame(window.airHockeyLoop || airHockeyLoop);
+    }
+    step();
+  }
+
+  const previousResetAirHockeyGameForCountdown = window.resetAirHockeyGame;
+  window.resetAirHockeyGame = function resetAirHockeyGameCountdownPatched() {
+    clearHockeyCountdown();
+    if (previousResetAirHockeyGameForCountdown) previousResetAirHockeyGameForCountdown();
+    // 原本 reset 會立即排入 loop，這裡取消掉，改成倒數結束後才正式開始。
+    if (airAnimId) {
+      cancelAnimationFrame(airAnimId);
+      airAnimId = null;
+    }
+    startHockeyCountdownThenLoop();
+  };
+
+  const previousStopAllGameLoopsForCountdown = window.stopAllGameLoops;
+  window.stopAllGameLoops = function stopAllGameLoopsCountdownPatched() {
+    clearHockeyCountdown();
+    return previousStopAllGameLoopsForCountdown ? previousStopAllGameLoopsForCountdown() : undefined;
+  };
+
+  window.addEventListener('DOMContentLoaded', setBlackjackViewportClass);
+  window.addEventListener('resize', setBlackjackViewportClass);
+})();
+</script>
+
+
+<script id="refresh-state-restore-script">
+/* Refresh State Restore v3：避免開機初始化把上一頁覆蓋成 HOME */
+(function () {
+  const STATE_KEY = 'cyber_arcade_last_screen_v3';
+  const LEGACY_KEYS = ['cyber_arcade_last_screen_v2', 'cyber_arcade_last_screen_v1'];
+  const VALID_GAMES = ['tank', 'snake', 'dino', 'airhockey', 'blackjack', 'mines'];
+  const VALID_VIEWS = ['view-home', 'view-leaderboard', 'view-game'];
+  let isRestoring = false;
+  let bootReadyToSave = false;
+
+  function normalizeState(state) {
+    if (!state || !VALID_VIEWS.includes(state.viewId)) return null;
+    const clean = { ...state };
+    if (clean.viewId === 'view-game') clean.gameId = VALID_GAMES.includes(clean.gameId) ? clean.gameId : 'tank';
+    if (clean.viewId === 'view-leaderboard') clean.leaderboardGameId = VALID_GAMES.includes(clean.leaderboardGameId) ? clean.leaderboardGameId : 'tank';
+    clean.gameId = VALID_GAMES.includes(clean.gameId) ? clean.gameId : 'tank';
+    clean.leaderboardGameId = VALID_GAMES.includes(clean.leaderboardGameId) ? clean.leaderboardGameId : 'tank';
+    clean.scrollY = Number(clean.scrollY) || 0;
+    return clean;
+  }
+
+  function stateFromHash() {
+    const hash = window.location.hash.replace(/^#/, '');
+    if (!hash) return null;
+    if (hash === 'home') return normalizeState({ viewId: 'view-home', gameId: 'tank', leaderboardGameId: 'tank' });
+    if (hash === 'leaderboard') return normalizeState({ viewId: 'view-leaderboard', gameId: 'tank', leaderboardGameId: 'tank' });
+    if (hash.startsWith('leaderboard-')) return normalizeState({ viewId: 'view-leaderboard', gameId: 'tank', leaderboardGameId: hash.replace('leaderboard-', '') });
+    if (hash.startsWith('game-')) return normalizeState({ viewId: 'view-game', gameId: hash.replace('game-', ''), leaderboardGameId: 'tank' });
+    return null;
+  }
+
+  function readStoredState() {
+    const keys = [STATE_KEY, ...LEGACY_KEYS];
+    for (const key of keys) {
+      try {
+        const state = normalizeState(JSON.parse(localStorage.getItem(key) || 'null'));
+        if (state) return state;
+      } catch (e) {}
+    }
+    return null;
+  }
+
+  // 重要：script 載入當下先把上一次狀態抓起來，避免 DOMContentLoaded 初始化時被覆蓋成 HOME。
+  const initialState = stateFromHash() || readStoredState();
+
+  function currentViewId() {
+    return document.querySelector('.view-section.active')?.id || 'view-home';
+  }
+  function currentGameId() {
+    try { if (typeof activeGameId !== 'undefined' && activeGameId) return activeGameId; } catch (e) {}
+    const wrap = document.querySelector('.game-wrap.active');
+    return wrap ? wrap.id.replace('wrap-', '') : 'tank';
+  }
+  function currentLeaderboardGameId() {
+    return document.getElementById('full-leaderboard-select')?.value || 'tank';
+  }
+
+  function hashForState(state) {
+    if (!state || state.viewId === 'view-home') return '#home';
+    if (state.viewId === 'view-game') return `#game-${state.gameId || 'tank'}`;
+    if (state.viewId === 'view-leaderboard') return `#leaderboard-${state.leaderboardGameId || 'tank'}`;
+    return '#home';
+  }
+
+  function writeState(state, updateHash = true, force = false) {
+    if ((!bootReadyToSave && !force) || isRestoring || !state) return;
+    const normalized = normalizeState(state);
+    if (!normalized) return;
+    normalized.scrollY = window.scrollY || normalized.scrollY || 0;
+    normalized.savedAt = Date.now();
+    try { localStorage.setItem(STATE_KEY, JSON.stringify(normalized)); } catch (e) {}
+    if (updateHash) {
+      const nextHash = hashForState(normalized);
+      if (window.location.hash !== nextHash) history.replaceState(null, '', nextHash);
+    }
+  }
+
+  function captureCurrentState(updateHash = true, force = false) {
+    const viewId = currentViewId();
+    writeState({
+      viewId,
+      gameId: currentGameId(),
+      leaderboardGameId: currentLeaderboardGameId(),
+      scrollY: window.scrollY || 0
+    }, updateHash, force);
+  }
+
+  function setLeaderboardSelectValue(gameId) {
+    const select = document.getElementById('full-leaderboard-select');
+    if (!select) return;
+    if (![...select.options].some(option => option.value === gameId)) return;
+    select.value = gameId;
+  }
+
+  function restoreState(reason = 'load') {
+    const state = normalizeState(stateFromHash() || initialState || readStoredState());
+    if (!state) {
+      bootReadyToSave = true;
+      captureCurrentState(true, true);
+      return;
+    }
+
+    isRestoring = true;
+    try {
+      if (typeof ensureFiveGameDom === 'function') ensureFiveGameDom();
+      if (state.viewId === 'view-game') {
+        if (typeof loadGameInTheater === 'function') loadGameInTheater(`game-${state.gameId}`);
+        if (typeof updateNavSelection === 'function') updateNavSelection(`game-${state.gameId}`);
+      } else if (state.viewId === 'view-leaderboard') {
+        if (typeof switchView === 'function') switchView('view-leaderboard');
+        if (typeof updateNavSelection === 'function') updateNavSelection('view-leaderboard');
+        setLeaderboardSelectValue(state.leaderboardGameId);
+        if (typeof renderFullLeaderboard === 'function') renderFullLeaderboard();
+      } else {
+        if (typeof switchView === 'function') switchView('view-home');
+        if (typeof updateNavSelection === 'function') updateNavSelection('view-home');
+      }
+      setTimeout(() => {
+        try { window.scrollTo({ top: Number(state.scrollY) || 0, behavior: 'instant' }); }
+        catch (e) { window.scrollTo(0, Number(state.scrollY) || 0); }
+      }, 80);
+    } finally {
+      setTimeout(() => {
+        isRestoring = false;
+        bootReadyToSave = true;
+        writeState(state, true, true);
+        console.log('[畫面記憶 v3] restored:', reason, state);
+      }, 180);
+    }
+  }
+
+  const oldSwitchView = window.switchView;
+  window.switchView = function switchViewRemembered(viewId) {
+    const result = oldSwitchView ? oldSwitchView(viewId) : undefined;
+    if (VALID_VIEWS.includes(viewId)) {
+      captureCurrentState(true);
+    }
+    return result;
+  };
+
+  const oldLoadGameInTheater = window.loadGameInTheater;
+  window.loadGameInTheater = function loadGameInTheaterRemembered(gameId) {
+    const result = oldLoadGameInTheater ? oldLoadGameInTheater(gameId) : undefined;
+    const cleanGameId = String(gameId || '').replace('game-', '');
+    if (VALID_GAMES.includes(cleanGameId)) {
+      writeState({ viewId: 'view-game', gameId: cleanGameId, leaderboardGameId: currentLeaderboardGameId(), scrollY: window.scrollY || 0 }, true);
+    }
+    return result;
+  };
+
+  document.addEventListener('click', event => {
+    if (!bootReadyToSave) bootReadyToSave = true;
+    const targetButton = event.target.closest('[data-target]');
+    const gameCard = event.target.closest('.game-card[data-game]');
+    if (targetButton) {
+      const target = targetButton.getAttribute('data-target');
+      if (target === 'view-home') writeState({ viewId: 'view-home', gameId: currentGameId(), leaderboardGameId: currentLeaderboardGameId() }, true, true);
+      else if (target === 'view-leaderboard') writeState({ viewId: 'view-leaderboard', gameId: currentGameId(), leaderboardGameId: currentLeaderboardGameId() }, true, true);
+      else if (target && target.startsWith('game-')) writeState({ viewId: 'view-game', gameId: target.replace('game-', ''), leaderboardGameId: currentLeaderboardGameId() }, true, true);
+    } else if (gameCard) {
+      writeState({ viewId: 'view-game', gameId: gameCard.dataset.game, leaderboardGameId: currentLeaderboardGameId() }, true, true);
+    }
+  }, true);
+
+  document.addEventListener('change', event => {
+    if (event.target && event.target.id === 'full-leaderboard-select') {
+      writeState({ viewId: 'view-leaderboard', gameId: currentGameId(), leaderboardGameId: event.target.value }, true, true);
+    }
+  }, true);
+
+  window.addEventListener('beforeunload', () => captureCurrentState(true, true));
+  window.addEventListener('hashchange', () => restoreState('hashchange'));
+
+  window.addEventListener('DOMContentLoaded', () => {
+    // 原始程式會在 DOMContentLoaded 切 HOME；v3 會在其後連續還原，且 bootReadyToSave 前不准覆寫舊狀態。
+    setTimeout(() => restoreState('DOMContentLoaded-50'), 50);
+    setTimeout(() => restoreState('DOMContentLoaded-250'), 250);
+    setTimeout(() => restoreState('DOMContentLoaded-700'), 700);
+  });
+})();
+</script>
+
+
+<script id="hockey-stuck-fix-script">
+/* 曲棍球卡球修正：防止球被 AI/玩家擊槌和牆角夾住 */
+(function () {
+  const GOAL_TOP = 130;
+  const GOAL_BOTTOM = 230;
+  const MIN_PUCK_SPEED = 3.8;
+  const MAX_PUCK_SPEED = 8.8;
+  const CORNER_MARGIN = 34;
+  let stuckFrames = 0;
+  let lastPuckX = 320;
+  let lastPuckY = 180;
+  let lastPaddleHitAt = 0;
+
+  function goalHit(y) {
+    return y >= GOAL_TOP && y <= GOAL_BOTTOM;
+  }
+
+  function normalizePuckSpeed(preferDir = 1) {
+    const speed = Math.sqrt(airPuck.vx * airPuck.vx + airPuck.vy * airPuck.vy) || 0;
+    if (!Number.isFinite(speed) || speed < 0.001) {
+      airPuck.vx = MIN_PUCK_SPEED * preferDir;
+      airPuck.vy = (Math.random() - 0.5) * 2.4;
+      return;
+    }
+    if (speed < MIN_PUCK_SPEED) {
+      const scale = MIN_PUCK_SPEED / speed;
+      airPuck.vx *= scale;
+      airPuck.vy *= scale;
+    } else if (speed > MAX_PUCK_SPEED) {
+      const scale = MAX_PUCK_SPEED / speed;
+      airPuck.vx *= scale;
+      airPuck.vy *= scale;
+    }
+
+    // 避免幾乎水平/垂直導致在牆邊來回震盪。
+    if (Math.abs(airPuck.vy) < 0.35) {
+      airPuck.vy += (Math.random() > 0.5 ? 1 : -1) * 0.85;
+    }
+    if (Math.abs(airPuck.vx) < 1.4) {
+      airPuck.vx += (airPuck.x < airCanvas.width / 2 ? 1 : -1) * 1.6;
+    }
+  }
+
+  function pushPuckOutOfCorner() {
+    const nearTop = airPuck.y < CORNER_MARGIN;
+    const nearBottom = airPuck.y > airCanvas.height - CORNER_MARGIN;
+    const nearLeft = airPuck.x < CORNER_MARGIN;
+    const nearRight = airPuck.x > airCanvas.width - CORNER_MARGIN;
+
+    if ((nearTop || nearBottom) && (nearLeft || nearRight) && !goalHit(airPuck.y)) {
+      airPuck.y = nearTop ? CORNER_MARGIN : airCanvas.height - CORNER_MARGIN;
+      airPuck.x = nearLeft ? CORNER_MARGIN : airCanvas.width - CORNER_MARGIN;
+      airPuck.vx = nearLeft ? Math.abs(airPuck.vx || MIN_PUCK_SPEED) : -Math.abs(airPuck.vx || MIN_PUCK_SPEED);
+      airPuck.vy = nearTop ? Math.abs(airPuck.vy || 1.8) : -Math.abs(airPuck.vy || 1.8);
+      normalizePuckSpeed(nearLeft ? 1 : -1);
+    }
+  }
+
+  function safePaddleCollision(paddle, dir) {
+    const dx = airPuck.x - paddle.x;
+    const dy = airPuck.y - paddle.y;
+    let dist = Math.sqrt(dx * dx + dy * dy);
+    const minDist = airPuck.r + paddle.r + 1.5;
+    if (dist >= minDist) return;
+
+    const now = performance.now();
+    let nx;
+    let ny;
+    if (dist < 0.001) {
+      // 完全重疊時給一個穩定方向，避免 NaN 或卡死。
+      nx = dir;
+      ny = (Math.random() - 0.5) * 0.35;
+      dist = 1;
+    } else {
+      nx = dx / dist;
+      ny = dy / dist;
+    }
+
+    // 把球推出擊槌外，避免下一幀還在碰撞範圍內。
+    airPuck.x = paddle.x + nx * minDist;
+    airPuck.y = paddle.y + ny * minDist;
+
+    // 如果擊槌把球壓在上下牆，先把球推回場內。
+    airPuck.y = Math.max(airPuck.r + 2, Math.min(airCanvas.height - airPuck.r - 2, airPuck.y));
+
+    const oldSpeed = Math.sqrt(airPuck.vx * airPuck.vx + airPuck.vy * airPuck.vy) || MIN_PUCK_SPEED;
+    const speed = Math.min(MAX_PUCK_SPEED, Math.max(MIN_PUCK_SPEED, oldSpeed + 0.38));
+    const side = dir > 0 ? 1 : -1;
+
+    // 連續碰撞時降低增速，避免黏住後爆速。
+    const repeatHit = now - lastPaddleHitAt < 90;
+    lastPaddleHitAt = now;
+    const jitter = (Math.random() - 0.5) * (repeatHit ? 0.5 : 1.1);
+
+    airPuck.vx = Math.abs(nx * speed) * side;
+    airPuck.vy = (ny * speed) + jitter;
+    normalizePuckSpeed(side);
+    pushPuckOutOfCorner();
+  }
+
+  function handlePuckBoundsAndGoals() {
+    // 上下牆反彈
+    if (airPuck.y - airPuck.r <= 0) {
+      airPuck.y = airPuck.r + 2;
+      airPuck.vy = Math.abs(airPuck.vy || 1.6);
+    } else if (airPuck.y + airPuck.r >= airCanvas.height) {
+      airPuck.y = airCanvas.height - airPuck.r - 2;
+      airPuck.vy = -Math.abs(airPuck.vy || 1.6);
+    }
+
+    // 左牆：只有中間球門才算分，其他都反彈。
+    if (airPuck.x - airPuck.r <= 0) {
+      if (goalHit(airPuck.y)) {
+        airScore.ai++;
+        resetAirPuck(-1);
+        return true;
+      }
+      airPuck.x = airPuck.r + 2;
+      airPuck.vx = Math.abs(airPuck.vx || MIN_PUCK_SPEED);
+      normalizePuckSpeed(1);
+    }
+
+    // 右牆：只有中間球門才算分，其他都反彈。
+    if (airPuck.x + airPuck.r >= airCanvas.width) {
+      if (goalHit(airPuck.y)) {
+        airScore.player++;
+        theaterScoreVal.innerText = airScore.player;
+        resetAirPuck(1);
+        return true;
+      }
+      airPuck.x = airCanvas.width - airPuck.r - 2;
+      airPuck.vx = -Math.abs(airPuck.vx || MIN_PUCK_SPEED);
+      normalizePuckSpeed(-1);
+    }
+
+    pushPuckOutOfCorner();
+    return false;
+  }
+
+  function detectAndRecoverStuckPuck() {
+    const moved = Math.abs(airPuck.x - lastPuckX) + Math.abs(airPuck.y - lastPuckY);
+    const speed = Math.sqrt(airPuck.vx * airPuck.vx + airPuck.vy * airPuck.vy) || 0;
+    const tooCloseToAIPaddle = Math.hypot(airPuck.x - airAI.x, airPuck.y - airAI.y) < airPuck.r + airAI.r + 3;
+    const tooCloseToPlayerPaddle = Math.hypot(airPuck.x - airPaddle.x, airPuck.y - airPaddle.y) < airPuck.r + airPaddle.r + 3;
+    const trappedNearWall = airPuck.x < 28 || airPuck.x > airCanvas.width - 28 || airPuck.y < 28 || airPuck.y > airCanvas.height - 28;
+
+    if ((moved < 0.45 && speed < 1.2) || ((tooCloseToAIPaddle || tooCloseToPlayerPaddle) && trappedNearWall)) {
+      stuckFrames++;
+    } else {
+      stuckFrames = Math.max(0, stuckFrames - 1);
+    }
+
+    if (stuckFrames > 22) {
+      // 不直接給分，改回到中場重新開球，避免玩家覺得莫名其妙失分。
+      airPuck.x = airCanvas.width / 2;
+      airPuck.y = airCanvas.height / 2;
+      const dir = Math.random() > 0.5 ? 1 : -1;
+      airPuck.vx = MIN_PUCK_SPEED * dir;
+      airPuck.vy = (Math.random() - 0.5) * 3.2;
+      stuckFrames = 0;
+      normalizePuckSpeed(dir);
+    }
+
+    lastPuckX = airPuck.x;
+    lastPuckY = airPuck.y;
+  }
+
+  // 重新覆寫曲棍球主迴圈：分段移動 + 反卡死 + 穩定碰撞。
+  window.airHockeyLoop = function airHockeyLoopAntiStuck() {
+    if (!airActive || !ctxAir) return;
+
+    // AI 不要貼太靠近上/下牆，降低把球壓進角落的機率。
+    airAI.y += (airPuck.y - airAI.y) * 0.052;
+    airAI.x += ((airPuck.x > 330 ? 500 : 555) - airAI.x) * 0.026;
+    airAI.y = Math.max(airAI.r + 18, Math.min(airCanvas.height - airAI.r - 18, airAI.y));
+    airAI.x = Math.max(airCanvas.width / 2 + airAI.r, Math.min(airCanvas.width - airAI.r - 8, airAI.x));
+
+    normalizePuckSpeed(airPuck.vx >= 0 ? 1 : -1);
+
+    // 分段移動，避免一幀移太多穿牆或陷入擊槌。
+    const steps = Math.max(1, Math.ceil(Math.max(Math.abs(airPuck.vx), Math.abs(airPuck.vy)) / 4));
+    for (let i = 0; i < steps; i++) {
+      airPuck.x += airPuck.vx / steps;
+      airPuck.y += airPuck.vy / steps;
+      safePaddleCollision(airPaddle, 1);
+      safePaddleCollision(airAI, -1);
+      const scored = handlePuckBoundsAndGoals();
+      if (scored) break;
+    }
+
+    detectAndRecoverStuckPuck();
+    drawAirHockey();
+
+    if (airScore.player >= 5 || airScore.ai >= 5) return endAirHockeyGame();
+    airAnimId = requestAnimationFrame(window.airHockeyLoop);
+  };
+
+  const previousResetAirHockeyForStuckFix = window.resetAirHockeyGame;
+  window.resetAirHockeyGame = function resetAirHockeyGameAntiStuck() {
+    stuckFrames = 0;
+    lastPuckX = 320;
+    lastPuckY = 180;
+    if (previousResetAirHockeyForStuckFix) previousResetAirHockeyForStuckFix();
+    // 倒數補丁會接手開始 loop；若沒有倒數補丁，則確保使用新版 loop。
+    if (airActive && airAnimId) {
+      cancelAnimationFrame(airAnimId);
+      airAnimId = requestAnimationFrame(window.airHockeyLoop);
+    }
+  };
+})();
+</script>
+
+
+<style id="mines-game-style">
+  /* 寶石地雷挑戰：5x5 地雷遊戲 */
+  .game-card[data-game="mines"] .card-thumb::after {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: #22c55e;
+    filter: blur(54px);
+    opacity: 0.16;
+  }
+  .menu-item-btn[data-target="game-mines"].active::before {
+    background: #22c55e;
+    box-shadow: 0 0 10px #22c55e;
+  }
+  .mines-overlay-btn {
+    background: linear-gradient(135deg, #22c55e 0%, #047857 100%);
+    box-shadow: 0 4px 15px rgba(34,197,94,0.35);
+  }
+  .mines-overlay-btn:hover {
+    box-shadow: 0 6px 20px rgba(34,197,94,0.62);
+    transform: translateY(-2px);
+  }
+  #mines-game-wrapper {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mines-board-shell {
+    width: min(100%, 520px);
+    padding: 22px;
+    border-radius: 24px;
+    background: radial-gradient(circle at center, rgba(34,197,94,0.08), rgba(3,7,18,0.96));
+    border: 1px solid rgba(34,197,94,0.22);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.035);
+  }
+  .mines-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .mines-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .mines-title-block strong {
+    font-size: 1.08rem;
+    font-weight: 950;
+  }
+  .mines-title-block span {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  .mines-score-pill {
+    min-width: 90px;
+    padding: 9px 13px;
+    border-radius: 999px;
+    text-align: center;
+    color: #bbf7d0;
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.32);
+    font-weight: 950;
+    box-shadow: 0 0 18px rgba(34,197,94,0.12);
+  }
+  .mines-status {
+    min-height: 22px;
+    margin-bottom: 14px;
+    text-align: center;
+    color: #cbd5e1;
+    font-weight: 800;
+    font-size: 0.9rem;
+  }
+  .mines-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    width: min(100%, 390px);
+    margin: 0 auto;
+    padding: 8px;
+    border-radius: 16px;
+    background: #07131f;
+    border: 1px solid rgba(255,255,255,0.055);
+  }
+  .mines-cell {
+    aspect-ratio: 1 / 1;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+    background: #334657;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 5px 12px rgba(0,0,0,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.05rem;
+    transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+  }
+  .mines-cell:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: #40566a;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), 0 8px 18px rgba(0,0,0,0.3);
+  }
+  .mines-cell:disabled {
+    cursor: default;
+  }
+  .mines-cell.revealed-gem {
+    background: #0e2433;
+    color: #22ff4f;
+    text-shadow: 0 0 12px rgba(34,255,79,0.85);
+  }
+  .mines-cell.revealed-bomb {
+    background: #3b0a17;
+    color: #fb7185;
+    text-shadow: 0 0 16px rgba(251,113,133,0.85);
+    animation: minesBombPop .28s ease both;
+  }
+  .mines-cell.unrevealed-after-end {
+    opacity: 0.55;
+  }
+  @keyframes minesBombPop {
+    0% { transform: scale(.9); }
+    55% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+  .mines-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .mines-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 11px 16px;
+    cursor: pointer;
+    color: #05130b;
+    background: #22c55e;
+    font-family: var(--font-sans);
+    font-weight: 950;
+    transition: transform .14s ease, box-shadow .14s ease, opacity .14s ease;
+  }
+  .mines-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(34,197,94,0.25); }
+  .mines-note {
+    margin-top: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    font-size: .78rem;
+    line-height: 1.35;
+  }
+  .game-viewport:fullscreen #mines-game-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .game-viewport:fullscreen .mines-board-shell {
+    width: min(90vw, 620px);
+  }
+  @media (max-width: 768px) {
+    .mines-board-shell { padding: 16px; }
+    .mines-grid { gap: 6px; }
+    .mines-cell { font-size: 1.55rem; }
+  }
+</style>
+
+
+<script id="mines-game-script">
+/* 新增遊戲：寶石地雷挑戰。純娛樂分數制，不含เงินจริง下注。 */
+(function () {
+  const MINES_ID = 'mines';
+  const MINES_META = {
+    id: 'mines',
+    badge: '💎',
+    title: '寶石地雷挑戰',
+    fullTitle: '寶石地雷挑戰',
+    genre: '記憶運氣',
+    tag: '地雷挑戰',
+    scoreLabel: '寶石分數:',
+    scoreUnit: '分',
+    bannerTag: '全新地雷挑戰',
+    bannerTitle: '寶石地雷挑戰',
+    bannerDesc: '5x5 格子中藏有 1 顆炸彈，其餘都是寶石。避開炸彈並翻出越多寶石，分數越高。'
+  };
+
+  const minesState = window.minesState = {
+    bombIndex: -1,
+    revealed: new Set(),
+    active: false,
+    score: 0,
+    gameOver: true
+  };
+
+  function addMinesMeta() {
+    try {
+      if (Array.isArray(ALL_GAMES) && !ALL_GAMES.some(game => game.id === MINES_ID)) {
+        ALL_GAMES.push(MINES_META);
+      }
+    } catch (e) {}
+    try {
+      if (typeof defaultVotes !== 'undefined' && defaultVotes && !defaultVotes.mines) {
+        defaultVotes.mines = { likes: 120, dislikes: 6, userVote: null };
+      }
+    } catch (e) {}
+  }
+
+  function ensureMinesDom() {
+    addMinesMeta();
+    if (typeof ensureFiveGameDom === 'function') ensureFiveGameDom();
+
+    const sidebarMenu = document.querySelector('.sidebar-menu');
+    if (sidebarMenu && !document.querySelector('.menu-item-btn[data-target="game-mines"]')) {
+      const leaderLi = sidebarMenu.querySelector('.menu-item-btn[data-target="view-leaderboard"]')?.closest('li');
+      const html = `<li><button class="menu-item-btn" data-target="game-mines" onclick="loadGameInTheater('game-mines')"><span class="menu-icon">💎</span><span>寶石地雷挑戰</span></button></li>`;
+      leaderLi ? leaderLi.insertAdjacentHTML('beforebegin', html) : sidebarMenu.insertAdjacentHTML('beforeend', html);
+    }
+
+    const mobileNav = document.querySelector('.mobile-nav-bar');
+    if (mobileNav && !document.querySelector('.mobile-nav-btn[data-target="game-mines"]')) {
+      const leaderBtn = mobileNav.querySelector('.mobile-nav-btn[data-target="view-leaderboard"]');
+      const html = `<button class="mobile-nav-btn" data-target="game-mines" onclick="loadGameInTheater('game-mines')"><span class="mobile-icon">💎</span><span>地雷</span></button>`;
+      leaderBtn ? leaderBtn.insertAdjacentHTML('beforebegin', html) : mobileNav.insertAdjacentHTML('beforeend', html);
+    }
+
+    const grid = document.querySelector('.game-grid');
+    if (grid && !document.querySelector('.game-card[data-game="mines"]')) {
+      grid.insertAdjacentHTML('beforeend', `<div class="game-card" data-game="mines" onclick="loadGameInTheater('game-mines')"><div class="card-thumb"><span class="card-thumb-badge">💎</span><div class="game-card-tags"><span class="card-tag tag-new">New</span><span class="card-tag" style="background:#22c55e; color:#04130a;">地雷</span></div></div><div class="card-info"><div><h4 class="card-title">寶石地雷挑戰</h4><p class="card-desc">5x5 格子中只有 1 顆炸彈，其餘都是寶石。翻開越多安全格，分數越高；踩到炸彈就結束。</p></div><div class="card-meta"><span class="meta-likes" id="card-likes-mines">👍 讀取中...</span><span>💎 Mines</span></div></div></div>`);
+    }
+
+    const viewport = document.querySelector('.game-viewport');
+    if (viewport && !document.getElementById('wrap-mines')) {
+      viewport.insertAdjacentHTML('beforeend', `<div class="game-wrap" id="wrap-mines"><div class="game-overlay" id="overlay-mines"><h3 class="overlay-title">寶石地雷挑戰</h3><p class="overlay-desc">5x5 格子裡藏著 1 顆炸彈。翻開寶石可以加分，踩到炸彈就結束。這是純娛樂分數制，沒有เงินจริง下注。</p><button class="btn-overlay-action mines-overlay-btn" onclick="startActiveGame('mines')">開始挑戰</button></div><div id="mines-game-wrapper"><div class="mines-board-shell"><div class="mines-topbar"><div class="mines-title-block"><strong>💎 寶石地雷挑戰</strong><span>25 格裡有 1 顆炸彈</span></div><div class="mines-score-pill" id="mines-score-pill">0 分</div></div><div class="mines-status" id="mines-status">按開始挑戰後翻格子</div><div class="mines-grid" id="mines-grid"></div><div class="mines-actions"><button class="mines-btn" id="mines-restart-btn" type="button">重新開始</button></div><div class="mines-note">每翻到 1 顆寶石 +1 分。踩到炸彈會結束並登錄目前寶石數。</div></div></div></div>`);
+      document.getElementById('mines-restart-btn')?.addEventListener('click', resetMinesGame);
+      renderMinesBoard();
+    }
+
+    const sel = document.getElementById('full-leaderboard-select');
+    if (sel && !sel.querySelector('option[value="mines"]')) {
+      sel.insertAdjacentHTML('beforeend', `<option value="mines">💎 寶石地雷挑戰 (寶石分數)</option>`);
+    }
+  }
+
+  function renderMinesBoard() {
+    const grid = document.getElementById('mines-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    for (let i = 0; i < 25; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mines-cell';
+      btn.dataset.index = String(i);
+      btn.setAttribute('aria-label', `第 ${i + 1} 格`);
+      if (minesState.revealed.has(i)) {
+        btn.disabled = true;
+        if (i === minesState.bombIndex) {
+          btn.classList.add('revealed-bomb');
+          btn.innerText = '💣';
+        } else {
+          btn.classList.add('revealed-gem');
+          btn.innerText = '💎';
+        }
+      } else if (minesState.gameOver && minesState.bombIndex >= 0) {
+        btn.disabled = true;
+        btn.classList.add('unrevealed-after-end');
+        if (i === minesState.bombIndex) {
+          btn.classList.add('revealed-bomb');
+          btn.innerText = '💣';
+        }
+      } else {
+        btn.innerText = '';
+        btn.disabled = !minesState.active;
+        btn.addEventListener('click', () => revealMinesCell(i));
+      }
+      grid.appendChild(btn);
+    }
+
+    const scorePill = document.getElementById('mines-score-pill');
+    if (scorePill) scorePill.innerText = `${minesState.score} 分`;
+    if (theaterScoreVal && activeGameId === MINES_ID) theaterScoreVal.innerText = minesState.score;
+  }
+
+  function resetMinesGame() {
+    ensureMinesDom();
+    closeSubmitWidget();
+    minesState.bombIndex = Math.floor(Math.random() * 25);
+    minesState.revealed = new Set();
+    minesState.active = true;
+    minesState.score = 0;
+    minesState.gameOver = false;
+    const overlay = document.getElementById('overlay-mines');
+    if (overlay) overlay.classList.add('hidden');
+    const status = document.getElementById('mines-status');
+    if (status) status.innerText = '選一格翻開，避開炸彈！';
+    if (theaterScoreVal) theaterScoreVal.innerText = 0;
+    renderMinesBoard();
+  }
+
+  function revealMinesCell(index) {
+    if (!minesState.active || minesState.gameOver || minesState.revealed.has(index)) return;
+    minesState.revealed.add(index);
+
+    if (index === minesState.bombIndex) {
+      minesState.active = false;
+      minesState.gameOver = true;
+      const status = document.getElementById('mines-status');
+      if (status) status.innerText = `踩到炸彈！本次得到 ${minesState.score} 分。`;
+      renderMinesBoard();
+      finishMinesGame(false);
+      return;
+    }
+
+    minesState.score += 1;
+    const status = document.getElementById('mines-status');
+    if (status) status.innerText = `找到寶石！目前 ${minesState.score} 分。`;
+    renderMinesBoard();
+
+    if (minesState.score >= 24) {
+      minesState.active = false;
+      minesState.gameOver = true;
+      if (status) status.innerText = '完美避開炸彈！24 分！';
+      finishMinesGame(true);
+    }
+  }
+
+  function finishMinesGame(perfect) {
+    const finalScore = Number(minesState.score) || 0;
+    const overlay = document.getElementById('overlay-mines');
+    if (overlay) {
+      overlay.querySelector('.overlay-title').innerText = perfect ? '💎 完美通關！' : '💥 挑戰結束！';
+      overlay.querySelector('.overlay-title').className = perfect ? 'overlay-title game-win' : 'overlay-title game-over';
+      overlay.querySelector('.overlay-desc').innerText = perfect ? `你避開炸彈並翻出全部寶石，最終分數：${finalScore} 分。` : `你踩到炸彈了，最終寶石分數：${finalScore} 分。`;
+      overlay.querySelector('.btn-overlay-action').innerText = '再玩一次';
+      overlay.classList.remove('hidden');
+    }
+    if (finalScore > 0) triggerGameEndSettlement(finalScore);
+  }
+
+  window.resetMinesGame = resetMinesGame;
+  window.revealMinesCell = revealMinesCell;
+
+  const oldStopAllGameLoops = window.stopAllGameLoops;
+  window.stopAllGameLoops = function stopAllGameLoopsWithMines() {
+    minesState.active = false;
+    return oldStopAllGameLoops ? oldStopAllGameLoops() : undefined;
+  };
+
+  const oldStartActiveGame = window.startActiveGame;
+  window.startActiveGame = function startActiveGameWithMines(gameType) {
+    if (gameType === MINES_ID) {
+      ensureMinesDom();
+      resetMinesGame();
+      return;
+    }
+    return oldStartActiveGame ? oldStartActiveGame(gameType) : undefined;
+  };
+
+  const oldUpdateDetails = window.updateTheaterDetailsPanel;
+  window.updateTheaterDetailsPanel = function updateTheaterDetailsWithMines(gameId) {
+    if (gameId === MINES_ID) {
+      ensureMinesDom();
+      document.getElementById('details-game-title').innerText = '寶石地雷挑戰';
+      document.getElementById('details-game-tag').innerText = '地雷挑戰';
+      document.getElementById('details-score-label').innerText = '寶石分數:';
+      document.getElementById('details-game-desc').innerText = '5x5 格子中只有 1 顆炸彈，其餘都是寶石。每翻到一顆寶石 +1 分，踩到炸彈就結束並登錄目前分數。純娛樂分數制，沒有เงินจริง下注。';
+      document.getElementById('details-controls-guide').innerHTML = `<div class="guide-item"><span class="kbd-btn">點擊格子</span><span>翻開寶石或炸彈</span></div><div class="guide-item"><span class="kbd-btn">💎 +1</span><span>越多寶石分數越高</span></div>`;
+      try { if (typeof updateVotingWidget === 'function') updateVotingWidget(gameId); } catch (e) {}
+      renderMinesBoard();
+      return;
+    }
+    return oldUpdateDetails ? oldUpdateDetails(gameId) : undefined;
+  };
+
+  const oldRenderAllLikeRates = window.renderAllLikeRates;
+  window.renderAllLikeRates = function renderAllLikeRatesWithMines() {
+    if (typeof oldRenderAllLikeRates === 'function') oldRenderAllLikeRates();
+    try {
+      const votes = typeof getVotes === 'function' ? getVotes() : {};
+      const data = votes.mines || { likes: 120, dislikes: 6 };
+      const total = data.likes + data.dislikes;
+      const rate = total > 0 ? ((data.likes / total) * 100).toFixed(1) : '0.0';
+      const cardEl = document.getElementById('card-likes-mines');
+      if (cardEl) cardEl.innerText = `👍 ${rate}% 喜歡`;
+    } catch (e) {}
+  };
+
+  const oldEnsureFiveGameDom = window.ensureFiveGameDom;
+  window.ensureFiveGameDom = function ensureFiveGameDomWithMines() {
+    if (typeof oldEnsureFiveGameDom === 'function') oldEnsureFiveGameDom();
+    // 防止遞迴：直接執行 mines 專屬 DOM 補齊，但不要再呼叫 ensureFiveGameDom。
+    addMinesMeta();
+    const sidebarMenu = document.querySelector('.sidebar-menu');
+    if (sidebarMenu && !document.querySelector('.menu-item-btn[data-target="game-mines"]')) {
+      const leaderLi = sidebarMenu.querySelector('.menu-item-btn[data-target="view-leaderboard"]')?.closest('li');
+      const html = `<li><button class="menu-item-btn" data-target="game-mines" onclick="loadGameInTheater('game-mines')"><span class="menu-icon">💎</span><span>寶石地雷挑戰</span></button></li>`;
+      leaderLi ? leaderLi.insertAdjacentHTML('beforebegin', html) : sidebarMenu.insertAdjacentHTML('beforeend', html);
+    }
+    const mobileNav = document.querySelector('.mobile-nav-bar');
+    if (mobileNav && !document.querySelector('.mobile-nav-btn[data-target="game-mines"]')) {
+      const leaderBtn = mobileNav.querySelector('.mobile-nav-btn[data-target="view-leaderboard"]');
+      const html = `<button class="mobile-nav-btn" data-target="game-mines" onclick="loadGameInTheater('game-mines')"><span class="mobile-icon">💎</span><span>地雷</span></button>`;
+      leaderBtn ? leaderBtn.insertAdjacentHTML('beforebegin', html) : mobileNav.insertAdjacentHTML('beforeend', html);
+    }
+    const grid = document.querySelector('.game-grid');
+    if (grid && !document.querySelector('.game-card[data-game="mines"]')) {
+      grid.insertAdjacentHTML('beforeend', `<div class="game-card" data-game="mines" onclick="loadGameInTheater('game-mines')"><div class="card-thumb"><span class="card-thumb-badge">💎</span><div class="game-card-tags"><span class="card-tag tag-new">New</span><span class="card-tag" style="background:#22c55e; color:#04130a;">地雷</span></div></div><div class="card-info"><div><h4 class="card-title">寶石地雷挑戰</h4><p class="card-desc">5x5 格子中只有 1 顆炸彈，其餘都是寶石。翻開越多安全格，分數越高；踩到炸彈就結束。</p></div><div class="card-meta"><span class="meta-likes" id="card-likes-mines">👍 讀取中...</span><span>💎 Mines</span></div></div></div>`);
+    }
+    const viewport = document.querySelector('.game-viewport');
+    if (viewport && !document.getElementById('wrap-mines')) {
+      viewport.insertAdjacentHTML('beforeend', `<div class="game-wrap" id="wrap-mines"><div class="game-overlay" id="overlay-mines"><h3 class="overlay-title">寶石地雷挑戰</h3><p class="overlay-desc">5x5 格子裡藏著 1 顆炸彈。翻開寶石可以加分，踩到炸彈就結束。這是純娛樂分數制，沒有เงินจริง下注。</p><button class="btn-overlay-action mines-overlay-btn" onclick="startActiveGame('mines')">開始挑戰</button></div><div id="mines-game-wrapper"><div class="mines-board-shell"><div class="mines-topbar"><div class="mines-title-block"><strong>💎 寶石地雷挑戰</strong><span>25 格裡有 1 顆炸彈</span></div><div class="mines-score-pill" id="mines-score-pill">0 分</div></div><div class="mines-status" id="mines-status">按開始挑戰後翻格子</div><div class="mines-grid" id="mines-grid"></div><div class="mines-actions"><button class="mines-btn" id="mines-restart-btn" type="button">重新開始</button></div><div class="mines-note">每翻到 1 顆寶石 +1 分。踩到炸彈會結束並登錄目前寶石數。</div></div></div></div>`);
+      document.getElementById('mines-restart-btn')?.addEventListener('click', resetMinesGame);
+      renderMinesBoard();
+    }
+    const sel = document.getElementById('full-leaderboard-select');
+    if (sel && !sel.querySelector('option[value="mines"]')) {
+      sel.insertAdjacentHTML('beforeend', `<option value="mines">💎 寶石地雷挑戰 (寶石分數)</option>`);
+    }
+  };
+
+  window.addEventListener('DOMContentLoaded', () => {
+    ensureMinesDom();
+    try { if (typeof renderAllLikeRates === 'function') renderAllLikeRates(); } catch (e) {}
+  });
+})();
+</script>
+
+
+<style id="mines-cashout-scoring-style">
+  /* 寶石地雷：Cash Out 與累加分數補丁 */
+  .mines-score-detail {
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    color: var(--text-muted);
+    font-size: .8rem;
+    font-weight: 800;
+  }
+  .mines-mini-pill {
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .mines-btn.cashout {
+    color: #111827;
+    background: #fbbf24;
+  }
+  .mines-btn.cashout:hover {
+    box-shadow: 0 8px 22px rgba(251,191,36,.25);
+  }
+  .mines-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+</style>
+
+
+<script id="mines-cashout-scoring-script">
+/* Mines v2：確保遊戲出現在這份檔案，並加入 Cash Out 與第 n 格 +n 分規則。 */
+(function () {
+  const MINES_ID = 'mines';
+  const MINES_META = {
+    id: 'mines',
+    badge: '💎',
+    title: '寶石地雷挑戰',
+    fullTitle: '寶石地雷挑戰',
+    genre: 'Cash Out 地雷',
+    tag: 'Cash Out 挑戰',
+    scoreLabel: '累積分數:',
+    scoreUnit: '分',
+    bannerTag: '全新地雷挑戰',
+    bannerTitle: '寶石地雷挑戰',
+    bannerDesc: '5x5 格子中藏有 1 顆炸彈。翻第 1 格寶石 +1、第 2 格 +2、第 3 格 +3，可 Cash Out 把分數帶到下一回合。'
+  };
+
+  function addMinesMeta() {
+    try {
+      if (Array.isArray(ALL_GAMES) && !ALL_GAMES.some(game => game.id === MINES_ID)) {
+        ALL_GAMES.push(MINES_META);
+      }
+    } catch (e) {}
+    try {
+      if (Array.isArray(bannerPool) && !bannerPool.some(game => game.id === MINES_ID)) {
+        bannerPool.push({ id: 'mines', tag: MINES_META.bannerTag, title: MINES_META.bannerTitle, desc: MINES_META.bannerDesc });
+      }
+    } catch (e) {}
+    try {
+      if (typeof defaultVotes !== 'undefined' && defaultVotes && !defaultVotes.mines) {
+        defaultVotes.mines = { likes: 120, dislikes: 6, userVote: null };
+      }
+    } catch (e) {}
+  }
+
+  function minesStateSafe() {
+    window.minesState = window.minesState || {};
+    const s = window.minesState;
+    if (!(s.revealed instanceof Set)) s.revealed = new Set();
+    if (typeof s.totalScore !== 'number') s.totalScore = Number(s.score) || 0;
+    if (typeof s.roundGems !== 'number') s.roundGems = 0;
+    if (typeof s.bombIndex !== 'number') s.bombIndex = -1;
+    if (typeof s.active !== 'boolean') s.active = false;
+    if (typeof s.gameOver !== 'boolean') s.gameOver = true;
+    s.score = s.totalScore;
+    return s;
+  }
+
+  function ensureMinesCoreDom() {
+    addMinesMeta();
+
+    const sidebarMenu = document.querySelector('.sidebar-menu');
+    if (sidebarMenu && !document.querySelector('.menu-item-btn[data-target="game-mines"]')) {
+      const leaderLi = sidebarMenu.querySelector('.menu-item-btn[data-target="view-leaderboard"]')?.closest('li');
+      const html = `<li><button class="menu-item-btn" data-target="game-mines" onclick="loadGameInTheater('game-mines')"><span class="menu-icon">💎</span><span>寶石地雷挑戰</span></button></li>`;
+      leaderLi ? leaderLi.insertAdjacentHTML('beforebegin', html) : sidebarMenu.insertAdjacentHTML('beforeend', html);
+    }
+
+    const mobileNav = document.querySelector('.mobile-nav-bar');
+    if (mobileNav && !document.querySelector('.mobile-nav-btn[data-target="game-mines"]')) {
+      const leaderBtn = mobileNav.querySelector('.mobile-nav-btn[data-target="view-leaderboard"]');
+      const html = `<button class="mobile-nav-btn" data-target="game-mines" onclick="loadGameInTheater('game-mines')"><span class="mobile-icon">💎</span><span>地雷</span></button>`;
+      leaderBtn ? leaderBtn.insertAdjacentHTML('beforebegin', html) : mobileNav.insertAdjacentHTML('beforeend', html);
+    }
+
+    const grid = document.querySelector('.game-grid');
+    if (grid && !document.querySelector('.game-card[data-game="mines"]')) {
+      grid.insertAdjacentHTML('beforeend', `<div class="game-card" data-game="mines" onclick="loadGameInTheater('game-mines')"><div class="card-thumb"><span class="card-thumb-badge">💎</span><div class="game-card-tags"><span class="card-tag tag-new">New</span><span class="card-tag" style="background:#22c55e;color:#04130a;">地雷</span></div></div><div class="card-info"><div><h4 class="card-title">寶石地雷挑戰</h4><p class="card-desc">5x5 格子藏 1 顆炸彈。翻第 1 格 +1、第 2 格 +2、第 3 格 +3；可 Cash Out 帶分進下一回合。</p></div><div class="card-meta"><span class="meta-likes" id="card-likes-mines">👍 讀取中...</span><span>💎 Cash Out</span></div></div></div>`);
+    }
+
+    const viewport = document.querySelector('.game-viewport');
+    if (viewport && !document.getElementById('wrap-mines')) {
+      viewport.insertAdjacentHTML('beforeend', `<div class="game-wrap" id="wrap-mines"><div class="game-overlay" id="overlay-mines"><h3 class="overlay-title">寶石地雷挑戰</h3><p class="overlay-desc">5x5 格子裡藏著 1 顆炸彈。翻寶石累積分數，可 Cash Out 進下一回合；踩到炸彈才結算排行榜。</p><button class="btn-overlay-action mines-overlay-btn" onclick="startActiveGame('mines')">開始挑戰</button></div><div id="mines-game-wrapper"><div class="mines-board-shell"><div class="mines-topbar"><div class="mines-title-block"><strong>💎 寶石地雷挑戰</strong><span>25 格裡有 1 顆炸彈</span></div><div><div class="mines-score-pill" id="mines-score-pill">0 分</div><div class="mines-score-detail" id="mines-score-detail"><span class="mines-mini-pill" id="mines-round-pill">本輪 0 格</span><span class="mines-mini-pill" id="mines-next-pill">下一格 +1</span></div></div></div><div class="mines-status" id="mines-status">按開始挑戰後翻格子</div><div class="mines-grid" id="mines-grid"></div><div class="mines-actions"><button class="mines-btn cashout" id="mines-cashout-btn" type="button">CASH OUT</button><button class="mines-btn" id="mines-restart-btn" type="button">重新開始</button></div><div class="mines-note">翻第 1 格寶石 +1 分，第 2 格 +2 分，第 3 格 +3 分。CASH OUT 可保留累積分數進下一回合；踩到炸彈才結算排行榜。</div></div></div></div>`);
+    }
+
+    document.getElementById('mines-restart-btn')?.addEventListener('click', window.resetMinesGame);
+    document.getElementById('mines-cashout-btn')?.addEventListener('click', window.minesCashOut);
+
+    const sel = document.getElementById('full-leaderboard-select');
+    if (sel && !sel.querySelector('option[value="mines"]')) {
+      sel.insertAdjacentHTML('beforeend', `<option value="mines">💎 寶石地雷挑戰 (累積分數)</option>`);
+    }
+  }
+
+  function ensureMinesCashoutDom() {
+    try { if (typeof ensureFiveGameDom === 'function') ensureFiveGameDom(); } catch (e) {}
+    ensureMinesCoreDom();
+    const scorePill = document.getElementById('mines-score-pill');
+    if (scorePill && !document.getElementById('mines-score-detail')) {
+      scorePill.insertAdjacentHTML('afterend', `<div class="mines-score-detail" id="mines-score-detail"><span class="mines-mini-pill" id="mines-round-pill">本輪 0 格</span><span class="mines-mini-pill" id="mines-next-pill">下一格 +1</span></div>`);
+    }
+    const actions = document.querySelector('#mines-game-wrapper .mines-actions');
+    if (actions && !document.getElementById('mines-cashout-btn')) {
+      actions.insertAdjacentHTML('afterbegin', `<button class="mines-btn cashout" id="mines-cashout-btn" type="button">CASH OUT</button>`);
+      document.getElementById('mines-cashout-btn')?.addEventListener('click', window.minesCashOut);
+    }
+    const note = document.querySelector('#mines-game-wrapper .mines-note');
+    if (note) note.innerText = '翻第 1 格寶石 +1 分，第 2 格 +2 分，第 3 格 +3 分。CASH OUT 可保留累積分數進下一回合；踩到炸彈才結算排行榜。';
+  }
+
+  function updateMinesStatus(message) {
+    const status = document.getElementById('mines-status');
+    if (status) status.innerText = message;
+  }
+
+  function renderMinesCashoutBoard() {
+    ensureMinesCashoutDom();
+    const s = minesStateSafe();
+    const grid = document.getElementById('mines-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    for (let i = 0; i < 25; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mines-cell';
+      btn.dataset.index = String(i);
+      btn.setAttribute('aria-label', `第 ${i + 1} 格`);
+      if (s.revealed.has(i)) {
+        btn.disabled = true;
+        if (i === s.bombIndex) {
+          btn.classList.add('revealed-bomb');
+          btn.innerText = '💣';
+        } else {
+          btn.classList.add('revealed-gem');
+          btn.innerText = '💎';
+        }
+      } else if (s.gameOver && s.bombIndex >= 0) {
+        btn.disabled = true;
+        btn.classList.add('unrevealed-after-end');
+        if (i === s.bombIndex) {
+          btn.classList.add('revealed-bomb');
+          btn.innerText = '💣';
+        }
+      } else {
+        btn.disabled = !s.active;
+        btn.addEventListener('click', () => window.revealMinesCell(i));
+      }
+      grid.appendChild(btn);
+    }
+
+    const scorePill = document.getElementById('mines-score-pill');
+    const roundPill = document.getElementById('mines-round-pill');
+    const nextPill = document.getElementById('mines-next-pill');
+    const cashBtn = document.getElementById('mines-cashout-btn');
+    if (scorePill) scorePill.innerText = `${s.totalScore} 分`;
+    if (roundPill) roundPill.innerText = `本輪 ${s.roundGems} 格`;
+    if (nextPill) nextPill.innerText = `下一格 +${s.roundGems + 1}`;
+    if (cashBtn) cashBtn.disabled = !s.active || s.roundGems === 0;
+    try { if (theaterScoreVal && activeGameId === MINES_ID) theaterScoreVal.innerText = s.totalScore; } catch (e) {}
+  }
+
+  function newMinesRound(keepTotal = true) {
+    const s = minesStateSafe();
+    const oldTotal = keepTotal ? (Number(s.totalScore) || 0) : 0;
+    s.bombIndex = Math.floor(Math.random() * 25);
+    s.revealed = new Set();
+    s.roundGems = 0;
+    s.totalScore = oldTotal;
+    s.score = oldTotal;
+    s.active = true;
+    s.gameOver = false;
+    const overlay = document.getElementById('overlay-mines');
+    if (overlay) overlay.classList.add('hidden');
+    updateMinesStatus(keepTotal && oldTotal > 0 ? `已 Cash Out，累積 ${oldTotal} 分。新回合開始！` : '選一格翻開，避開炸彈！');
+    renderMinesCashoutBoard();
+  }
+
+  window.resetMinesGame = function resetMinesGameCashout() {
+    ensureMinesCashoutDom();
+    try { if (typeof closeSubmitWidget === 'function') closeSubmitWidget(); } catch (e) {}
+    const s = minesStateSafe();
+    s.totalScore = 0;
+    s.score = 0;
+    newMinesRound(false);
+  };
+
+  window.minesCashOut = function minesCashOut() {
+    const s = minesStateSafe();
+    if (!s.active || s.gameOver || s.roundGems <= 0) return;
+    newMinesRound(true);
+  };
+
+  window.revealMinesCell = function revealMinesCellCashout(index) {
+    const s = minesStateSafe();
+    if (!s.active || s.gameOver || s.revealed.has(index)) return;
+    s.revealed.add(index);
+
+    if (index === s.bombIndex) {
+      s.active = false;
+      s.gameOver = true;
+      s.score = s.totalScore;
+      updateMinesStatus(`踩到炸彈！最終累積 ${s.totalScore} 分。`);
+      renderMinesCashoutBoard();
+      finishMinesGameCashout();
+      return;
+    }
+
+    s.roundGems += 1;
+    const addScore = s.roundGems;
+    s.totalScore += addScore;
+    s.score = s.totalScore;
+    updateMinesStatus(`找到寶石！第 ${s.roundGems} 格 +${addScore} 分，目前累積 ${s.totalScore} 分。`);
+    renderMinesCashoutBoard();
+
+    if (s.roundGems >= 24) {
+      updateMinesStatus(`本輪 24 顆寶石全開！自動 Cash Out，累積 ${s.totalScore} 分。`);
+      setTimeout(() => {
+        const current = minesStateSafe();
+        if (current.active && !current.gameOver && current.roundGems >= 24) newMinesRound(true);
+      }, 850);
+    }
+  };
+
+  function finishMinesGameCashout() {
+    const s = minesStateSafe();
+    const finalScore = Number(s.totalScore) || 0;
+    const overlay = document.getElementById('overlay-mines');
+    if (overlay) {
+      overlay.querySelector('.overlay-title').innerText = '💥 炸彈爆炸！';
+      overlay.querySelector('.overlay-title').className = finalScore > 0 ? 'overlay-title game-win' : 'overlay-title game-over';
+      overlay.querySelector('.overlay-desc').innerText = `遊戲結束，最終累積分數：${finalScore} 分。`;
+      overlay.querySelector('.btn-overlay-action').innerText = '重新挑戰';
+      overlay.classList.remove('hidden');
+    }
+    try { if (typeof triggerGameEndSettlement === 'function') triggerGameEndSettlement(finalScore); } catch (e) {}
+  }
+
+  const oldEnsureFiveGameDom = window.ensureFiveGameDom;
+  window.ensureFiveGameDom = function ensureFiveGameDomMinesFixed() {
+    if (typeof oldEnsureFiveGameDom === 'function') oldEnsureFiveGameDom();
+    ensureMinesCoreDom();
+  };
+
+  const oldStartActiveGame = window.startActiveGame;
+  window.startActiveGame = function startActiveGameMinesFixed(gameType) {
+    if (gameType === MINES_ID) {
+      window.resetMinesGame();
+      return;
+    }
+    return oldStartActiveGame ? oldStartActiveGame(gameType) : undefined;
+  };
+
+  const oldUpdateTheaterDetailsPanel = window.updateTheaterDetailsPanel;
+  window.updateTheaterDetailsPanel = function updateTheaterDetailsPanelMinesFixed(gameId) {
+    if (typeof oldUpdateTheaterDetailsPanel === 'function') oldUpdateTheaterDetailsPanel(gameId);
+    if (gameId === MINES_ID) {
+      ensureMinesCashoutDom();
+      document.getElementById('details-game-title').innerText = '寶石地雷挑戰';
+      document.getElementById('details-game-tag').innerText = 'Cash Out 挑戰';
+      document.getElementById('details-score-label').innerText = '累積分數:';
+      document.getElementById('details-game-desc').innerText = '5x5 格子中只有 1 顆炸彈。每翻開一顆寶石，會依照本輪已翻開格數加分：第 1 格 +1、第 2 格 +2、第 3 格 +3。可以中途 CASH OUT，把累積分數帶到下一回合；直到翻出炸彈才結算排行榜。';
+      document.getElementById('details-controls-guide').innerHTML = `<div class="guide-item"><span class="kbd-btn">點擊格子</span><span>翻寶石累積分數</span></div><div class="guide-item"><span class="kbd-btn">CASH OUT</span><span>保留分數進下一回合</span></div>`;
+      renderMinesCashoutBoard();
+    }
+  };
+
+  const oldRenderAllLikeRates = window.renderAllLikeRates;
+  window.renderAllLikeRates = function renderAllLikeRatesMinesFixed() {
+    if (typeof oldRenderAllLikeRates === 'function') oldRenderAllLikeRates();
+    try {
+      const votes = typeof getVotes === 'function' ? getVotes() : {};
+      const data = votes.mines || { likes: 120, dislikes: 6 };
+      const total = data.likes + data.dislikes;
+      const rate = total > 0 ? ((data.likes / total) * 100).toFixed(1) : '0.0';
+      const cardEl = document.getElementById('card-likes-mines');
+      if (cardEl) cardEl.innerText = `👍 ${rate}% 喜歡`;
+    } catch (e) {}
+  };
+
+  window.renderMinesCashoutBoard = renderMinesCashoutBoard;
+  window.ensureMinesCashoutDom = ensureMinesCashoutDom;
+
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      ensureMinesCashoutDom();
+      renderMinesCashoutBoard();
+      try { if (typeof renderAllLikeRates === 'function') renderAllLikeRates(); } catch (e) {}
+    }, 150);
+    setTimeout(() => {
+      ensureMinesCashoutDom();
+      renderMinesCashoutBoard();
+    }, 700);
+  });
+})();
+</script>
+
 </body>
 </html>

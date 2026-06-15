@@ -1,9 +1,34 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+    function validGameId(gameId) {
+      return gameId in ['tank', 'snake', 'dino', 'airhockey', 'blackjack'];
+    }
+    function validScore() {
+      return request.resource.data.keys().hasOnly(['gameId', 'game', 'name', 'score', 'date', 'createdAt', 'timestamp']) &&
+        (validGameId(request.resource.data.gameId) || validGameId(request.resource.data.game)) &&
+        request.resource.data.name is string && request.resource.data.name.size() >= 1 && request.resource.data.name.size() <= 10 &&
+        request.resource.data.score is number && request.resource.data.score >= 0 && request.resource.data.score <= 999999;
+    }
+    match /arcade_leaderboard/{scoreId} {
+      allow read: if true;
+      allow create: if validScore();
+      allow update, delete: if false;
+    }
+    match /leaderboards/{scoreId} {
+      allow read: if true;
+      allow create: if validScore();
+      allow update, delete: if false;
+    }
+    match /arcade_votes/{gameId} {
+      allow read: if true;
+      allow create, update: if validGameId(gameId) &&
+        request.resource.data.keys().hasOnly(['gameId', 'likes', 'dislikes', 'updatedAt']) &&
+        request.resource.data.gameId == gameId &&
+        request.resource.data.likes is number && request.resource.data.dislikes is number &&
+        request.resource.data.likes >= 0 && request.resource.data.dislikes >= 0 &&
+        request.resource.data.likes <= 999999 && request.resource.data.dislikes <= 999999;
+      allow delete: if false;
     }
   }
 }
