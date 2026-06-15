@@ -1,0 +1,3057 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 賽博電玩城 - Cyber Arcade Portal</title>
+  
+  <!-- 引入 Google Fonts Outfit 與 Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- 引入 Firebase SDK Compat 版本 -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    /* ==========================================
+       1. 設計系統與全域樣式 (CrazyGames Dark Cyber Theme)
+       ========================================== */
+    :root {
+      --bg-body: #030308;
+      --bg-sidebar: rgba(8, 8, 16, 0.85);
+      --bg-panel: rgba(18, 18, 29, 0.5);
+      --border-color: rgba(255, 255, 255, 0.06);
+      
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+      
+      /* 霓虹燈配色 */
+      --neon-purple: #a855f7;
+      --neon-purple-glow: rgba(168, 85, 247, 0.35);
+      --neon-green: #10b981;
+      --neon-green-glow: rgba(16, 185, 129, 0.35);
+      --neon-rose: #f43f5e;
+      --neon-rose-glow: rgba(244, 63, 94, 0.35);
+      --neon-blue: #06b6d4;
+      --neon-blue-glow: rgba(6, 182, 212, 0.35);
+      --neon-gold: #fbbf24;
+      --neon-gold-glow: rgba(251, 191, 36, 0.3);
+      
+      --font-sans: 'Outfit', 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 30px 30px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 全域滾動條美化 */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* 環境微光裝飾 */
+    .glow-overlay {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(140px);
+      opacity: 0.08;
+      z-index: -1;
+      pointer-events: none;
+      animation: floatGlow 25s infinite alternate ease-in-out;
+    }
+    .glow-purple { background: var(--neon-purple); top: -10%; right: 5%; }
+    .glow-blue { background: var(--neon-blue); bottom: 10%; left: 5%; animation-delay: -6s; }
+
+    @keyframes floatGlow {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(60px, 40px) scale(1.1); }
+    }
+
+    /* ==========================================
+       2. 網頁佈局結構 (Main Layout Framework)
+       ========================================== */
+    #app-layout {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* 黏性側邊導覽欄 (Left Sidebar) */
+    .sidebar {
+      width: 250px;
+      background: var(--bg-sidebar);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      padding: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 30%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 35px;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+      cursor: pointer;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+
+    .menu-item-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .menu-item-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.03);
+      transform: translateX(4px);
+    }
+
+    .menu-item-btn.active {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.02);
+    }
+
+    /* 左側特定發光指示條 */
+    .menu-item-btn.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 4px;
+      height: 20px;
+      border-radius: 4px;
+    }
+    .menu-item-btn[data-target="view-home"].active::before { background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
+    .menu-item-btn[data-target="game-tank"].active::before { background: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
+    .menu-item-btn[data-target="game-snake"].active::before { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
+    .menu-item-btn[data-target="game-dino"].active::before { background: var(--neon-rose); box-shadow: 0 0 10px var(--neon-rose); }
+    .menu-item-btn[data-target="view-leaderboard"].active::before { background: var(--neon-gold); box-shadow: 0 0 10px var(--neon-gold); }
+
+    .menu-icon {
+      font-size: 1.15rem;
+    }
+
+    .sidebar-footer {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 16px;
+      text-align: center;
+    }
+
+    /* 手機版底部導覽列 (Mobile Bottom Nav) */
+    .mobile-nav-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(8, 8, 16, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border-color);
+      z-index: 99;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .mobile-nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.75rem;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      gap: 2px;
+      width: 60px;
+      transition: color 0.2s;
+    }
+
+    .mobile-nav-btn.active {
+      color: var(--text-main);
+    }
+    .mobile-nav-btn.active .mobile-icon {
+      transform: scale(1.1);
+    }
+    
+    .mobile-icon {
+      font-size: 1.25rem;
+      transition: transform 0.2s;
+    }
+
+    /* 主內容面板 (Main Content Panel) */
+    .main-content {
+      flex-grow: 1;
+      margin-left: 250px;
+      padding: 30px 40px;
+      max-width: 1400px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================
+       3. 首頁視圖大廳樣式 (Lobby View Styles)
+       ========================================== */
+    .view-section {
+      display: none;
+      animation: viewFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes viewFadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 置頂巨幕宣傳 banner */
+    .featured-banner {
+      width: 100%;
+      height: 300px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.6) 0%, rgba(3, 3, 8, 0.9) 100%);
+      border: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 35px;
+      display: flex;
+      align-items: center;
+      padding: 40px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .banner-glow {
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      background: var(--neon-purple);
+      filter: blur(100px);
+      border-radius: 50%;
+      opacity: 0.15;
+      right: 10%;
+      top: -20%;
+    }
+
+    .banner-content {
+      max-width: 480px;
+      z-index: 2;
+    }
+
+    .banner-tag {
+      display: inline-block;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--neon-purple);
+      color: var(--neon-purple);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .banner-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 60%, #c7d2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .banner-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .btn-banner-play {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--neon-purple) 0%, #7e22ce 100%);
+      color: #fff;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--neon-purple-glow);
+      transition: all 0.2s ease;
+    }
+
+    .btn-banner-play:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.65);
+    }
+
+    /* 遊戲卡片網格 */
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 18px;
+      background: var(--neon-blue);
+      border-radius: 2px;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .game-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      height: 380px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+    }
+
+    .card-thumb {
+      height: 180px;
+      width: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #090912;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.3s;
+    }
+
+    .card-thumb-badge {
+      font-size: 4rem;
+      z-index: 2;
+      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+    }
+
+    .game-card[data-game="tank"] .card-thumb::after {
+      content: ''; position: absolute; width: 140px; height: 140px; border-radius: 50%;
+      background: var(--neon-purple); filter: blur(50px); opacity: 0.15;
+    }
+    .game-card[data-game="snake"] .card-thumb::after {
+      content: ''; position: absolute; width: 140px; height: 140px; border-radius: 50%;
+      background: var(--neon-green); filter: blur(50px); opacity: 0.15;
+    }
+    .game-card[data-game="dino"] .card-thumb::after {
+      content: ''; position: absolute; width: 140px; height: 140px; border-radius: 50%;
+      background: var(--neon-rose); filter: blur(50px); opacity: 0.15;
+    }
+
+    .game-card-tags {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      display: flex;
+      gap: 6px;
+      z-index: 3;
+    }
+
+    .card-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 5px;
+      text-transform: uppercase;
+    }
+    .tag-hot { background: #ef4444; }
+    .tag-new { background: #3b82f6; }
+    .tag-classic { background: #f59e0b; }
+
+    .card-info {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
+      flex-grow: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.03);
+      padding-top: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .meta-likes {
+      color: var(--neon-gold);
+      font-weight: 600;
+    }
+
+    /* Cards Hover */
+    .game-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .game-card[data-game="tank"]:hover {
+      border-color: var(--neon-purple);
+      box-shadow: 0 12px 30px var(--neon-purple-glow);
+    }
+    .game-card[data-game="snake"]:hover {
+      border-color: var(--neon-green);
+      box-shadow: 0 12px 30px var(--neon-green-glow);
+    }
+    .game-card[data-game="dino"]:hover {
+      border-color: var(--neon-rose);
+      box-shadow: 0 12px 30px var(--neon-rose-glow);
+    }
+
+    .game-card:hover .card-thumb-badge {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+
+    /* ==========================================
+       4. 劇院遊戲模式佈局 (Game Theater Viewport)
+       ========================================== */
+    .theater-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    @media (min-width: 992px) {
+      .theater-container {
+        grid-template-columns: 1fr 340px;
+      }
+    }
+
+    .theater-main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* 遊戲核心視圖大框 (Viewport Screen) */
+    .game-viewport {
+      width: 100%;
+      background-color: #0b0a1a;
+      border: 3px solid rgba(255,255,255,0.05);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      aspect-ratio: 16 / 10;
+    }
+
+    .game-wrap {
+      display: none;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .game-wrap.active {
+      display: flex;
+    }
+
+    /* 懸浮全螢幕按鈕 📺 */
+    .btn-viewport-fullscreen {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(8, 8, 16, 0.65);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1.1rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      transition: all 0.2s;
+    }
+    .btn-viewport-fullscreen:hover {
+      background: rgba(8, 8, 16, 0.95);
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 12px var(--neon-blue-glow);
+      transform: scale(1.05);
+    }
+
+    /* HTML5 原生全螢幕樣式調校 */
+    .game-viewport:fullscreen {
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      max-height: 100vh;
+      aspect-ratio: auto;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #020205;
+    }
+    .game-viewport:fullscreen #tank-game-wrapper,
+    .game-viewport:fullscreen #snake-game-wrapper,
+    .game-viewport:fullscreen #dino-game-wrapper {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .game-viewport:fullscreen #tank-canvas {
+      width: 85vw !important;
+      height: 85vh !important;
+      max-width: 85vw !important;
+      max-height: 85vh !important;
+      object-fit: contain !important;
+    }
+    .game-viewport:fullscreen #snake-canvas {
+      width: 70vw !important;
+      height: 70vh !important;
+      max-width: 70vw !important;
+      max-height: 70vh !important;
+      object-fit: contain !important;
+    }
+    .game-viewport:fullscreen #dino-canvas {
+      width: 90vw !important;
+      height: 90vh !important;
+      max-width: 90vw !important;
+      max-height: 90vh !important;
+      object-fit: contain !important;
+    }
+
+    /* 劇院模式大廳下方的基本資訊 */
+    .theater-details {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 25px;
+    }
+
+    .detail-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .detail-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .detail-meta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .detail-tag {
+      background: rgba(255,255,255,0.05);
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .detail-likes-pill {
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      color: var(--neon-gold);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .detail-description {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      border-top: 1px solid var(--border-color);
+      padding-top: 15px;
+      margin-top: 15px;
+    }
+
+    /* 操作引導 */
+    .control-guide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 18px;
+    }
+
+    .guide-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    .kbd-btn {
+      background: #1e1b4b;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-bottom-width: 3px;
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-family: var(--font-sans);
+    }
+
+    /* 右欄側邊小工具 */
+    .theater-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .widget-box {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .widget-title {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    /* 側欄即時排行 */
+    .widget-leaderboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .widget-rank-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.015);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+    }
+
+    .widget-rank-row.highlight {
+      background: rgba(251, 191, 36, 0.05);
+      border-color: rgba(251, 191, 36, 0.15);
+    }
+
+    .widget-rank-num {
+      font-weight: 700;
+      width: 24px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .widget-rank-row:nth-child(1) .widget-rank-num { color: var(--neon-gold); }
+    .widget-rank-row:nth-child(2) .widget-rank-num { color: #cbd5e1; }
+    .widget-rank-row:nth-child(3) .widget-rank-num { color: #b45309; }
+
+    .widget-rank-name {
+      font-weight: 600;
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-right: 10px;
+    }
+
+    .widget-rank-score {
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-main);
+    }
+
+    /* 側欄分數登錄面板 */
+    .widget-register-box {
+      border-color: rgba(251, 191, 36, 0.2);
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.03) 0%, rgba(18, 18, 29, 0.5) 100%);
+      display: none;
+      animation: widgetPulse 2s infinite alternate;
+    }
+
+    .widget-register-box.active {
+      display: block;
+    }
+
+    @keyframes widgetPulse {
+      0% { border-color: rgba(251, 191, 36, 0.2); box-shadow: 0 0 10px rgba(251, 191, 36, 0); }
+      100% { border-color: rgba(251, 191, 36, 0.5); box-shadow: 0 0 15px rgba(251, 191, 36, 0.15); }
+    }
+
+    .widget-register-title {
+      color: var(--neon-gold);
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .widget-register-desc {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .widget-register-stats {
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-around;
+      font-size: 0.8rem;
+    }
+
+    .widget-register-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+      outline: none;
+    }
+    .widget-register-input:focus {
+      border-color: var(--neon-gold);
+    }
+
+    .btn-widget-submit {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #000;
+      background: var(--neon-gold);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-widget-submit:hover {
+      background: #f59e0b;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    }
+
+    /* 推薦遊戲快捷小卡 */
+    .rec-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.01);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: all 0.2s ease;
+    }
+    .rec-card:hover {
+      background: rgba(255,255,255,0.03);
+      transform: translateX(4px);
+    }
+    .rec-card-badge { font-size: 1.8rem; }
+    .rec-card-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; }
+    .rec-card-genre { font-size: 0.75rem; color: var(--text-muted); }
+
+
+    /* ==========================================
+       5. 遊戲畫面規格與包裝
+       ========================================== */
+    
+    /* 遊戲一：坦克大作戰 */
+    #tank-game-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+    #tank-canvas {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      background: #070714;
+    }
+
+    /* 遊戲二：經典貪吃蛇 */
+    #snake-game-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #snake-canvas {
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 1/1;
+    }
+
+    /* 遊戲三：小恐龍快跑 */
+    #dino-game-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #dino-canvas {
+      width: 100%;
+      max-width: 580px;
+      height: auto;
+      aspect-ratio: 700 / 350; /* 更新比例 */
+      background: #080816;
+      border-radius: 16px;
+    }
+
+    /* 遊戲覆蓋層 */
+    .game-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(4, 4, 10, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      padding: 20px;
+      text-align: center;
+      border-radius: 20px;
+      transition: opacity 0.3s ease;
+    }
+
+    .game-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .overlay-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .overlay-title.game-over { color: var(--neon-rose); }
+    .overlay-title.game-win { color: var(--neon-green); }
+
+    .overlay-desc {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      max-width: 320px;
+    }
+
+    .btn-overlay-action {
+      padding: 12px 28px;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255,255,255,0.05);
+      transition: all 0.2s ease;
+    }
+
+    .tank-overlay-btn {
+      background: linear-gradient(135deg, var(--neon-purple) 0%, #7e22ce 100%);
+      box-shadow: 0 4px 15px var(--neon-purple-glow);
+    }
+    .tank-overlay-btn:hover { box-shadow: 0 6px 20px rgba(168, 85, 247, 0.65); transform: translateY(-2px); }
+
+    .snake-overlay-btn {
+      background: linear-gradient(135deg, var(--neon-green) 0%, #047857 100%);
+      box-shadow: 0 4px 15px var(--neon-green-glow);
+    }
+    .snake-overlay-btn:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.65); transform: translateY(-2px); }
+
+    .dino-overlay-btn {
+      background: linear-gradient(135deg, var(--neon-rose) 0%, #be123c 100%);
+      box-shadow: 0 4px 15px var(--neon-rose-glow);
+    }
+    .dino-overlay-btn:hover { box-shadow: 0 6px 20px rgba(244, 63, 94, 0.65); transform: translateY(-2px); }
+
+
+    /* 手機版虛擬操縱盤 */
+    .mobile-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 8px;
+      width: 160px;
+      height: 160px;
+      margin: 20px auto 0 auto;
+    }
+
+    .dpad-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.1s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .dpad-btn:active {
+      transform: scale(0.92);
+      background: rgba(16, 185, 129, 0.15);
+    }
+    .dpad-btn.up { grid-column: 2; grid-row: 1; border-color: rgba(16, 185, 129, 0.3); }
+    .dpad-btn.left { grid-column: 1; grid-row: 2; border-color: rgba(16, 185, 129, 0.3); }
+    .dpad-btn.down { grid-column: 2; grid-row: 3; border-color: rgba(16, 185, 129, 0.3); }
+    .dpad-btn.right { grid-column: 3; grid-row: 2; border-color: rgba(16, 185, 129, 0.3); }
+
+
+    /* ==========================================
+       6. 排行榜視圖樣式 (Leaderboard View)
+       ========================================== */
+    .leaderboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .leaderboard-select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: #fff;
+      padding: 8px 16px;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .leaderboard-select:focus {
+      border-color: var(--neon-gold);
+    }
+
+    .leaderboard-panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 24px;
+    }
+
+    .full-leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .full-leaderboard-table th, .full-leaderboard-table td {
+      padding: 16px 20px;
+    }
+    .full-leaderboard-table th {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .full-leaderboard-table tr {
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      transition: background 0.2s;
+    }
+    .full-leaderboard-table tr:hover {
+      background: rgba(255,255,255,0.01);
+    }
+
+    .full-rank {
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+    }
+    .full-rank-1 { color: var(--neon-gold); text-shadow: 0 0 10px rgba(251,191,36,0.3); }
+    .full-rank-2 { color: #cbd5e1; }
+    .full-rank-3 { color: #b45309; }
+
+    .btn-clear-leaderboard {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      background: transparent;
+      color: #f87171;
+      border: 1px dashed rgba(248, 113, 113, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-clear-leaderboard:hover {
+      background: rgba(248, 113, 113, 0.05);
+      border-color: #ef4444;
+    }
+
+    /* RWD 響應式調整 */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      .mobile-nav-bar {
+        display: flex;
+      }
+      .main-content {
+        margin-left: 0;
+        padding: 20px 16px 80px 16px;
+      }
+      .featured-banner {
+        height: auto;
+        padding: 24px;
+        margin-bottom: 25px;
+      }
+      .banner-title {
+        font-size: 1.6rem;
+      }
+      .game-viewport {
+        padding: 10px;
+        aspect-ratio: auto;
+        height: 380px;
+      }
+      .theater-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 背景裝飾微光 -->
+  <div class="glow-overlay glow-purple"></div>
+  <div class="glow-overlay glow-blue"></div>
+
+  <div id="app-layout">
+    
+    <!-- ==========================================
+         A. 黏性側邊導覽欄 (Left Sidebar)
+         ========================================== -->
+    <aside class="sidebar">
+      <div class="sidebar-logo" onclick="switchView('view-home')">
+        <span>🎮 Cyber Arcade</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <button class="menu-item-btn active" data-target="view-home">
+            <span class="menu-icon">🏠</span>
+            <span>大廳首頁</span>
+          </button>
+        </li>
+        <li>
+          <button class="menu-item-btn" data-target="game-tank">
+            <span class="menu-icon">🛡️</span>
+            <span>坦克大作戰</span>
+          </button>
+        </li>
+        <li>
+          <button class="menu-item-btn" data-target="game-snake">
+            <span class="menu-icon">🐍</span>
+            <span>經典貪吃蛇</span>
+          </button>
+        </li>
+        <li>
+          <button class="menu-item-btn" data-target="game-dino">
+            <span class="menu-icon">🦖</span>
+            <span>小恐龍快跑</span>
+          </button>
+        </li>
+        <li>
+          <button class="menu-item-btn" data-target="view-leaderboard">
+            <span class="menu-icon">🏆</span>
+            <span>排行榜大廳</span>
+          </button>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <p>Cyber Game Hub v3.0</p>
+        <p style="margin-top: 4px; font-size: 0.65rem; color: #475569;" id="connection-status">降級單機模式</p>
+      </div>
+    </aside>
+
+    <!-- ==========================================
+         B. 手機版底部導覽列 (Mobile Nav Bar)
+         ========================================== -->
+    <nav class="mobile-nav-bar">
+      <button class="mobile-nav-btn active" data-target="view-home">
+        <span class="mobile-icon">🏠</span>
+        <span>首頁</span>
+      </button>
+      <button class="mobile-nav-btn" data-target="game-tank">
+        <span class="mobile-icon">🛡️</span>
+        <span>坦克</span>
+      </button>
+      <button class="mobile-nav-btn" data-target="game-snake">
+        <span class="mobile-icon">🐍</span>
+        <span>貪吃蛇</span>
+      </button>
+      <button class="mobile-nav-btn" data-target="game-dino">
+        <span class="mobile-icon">🦖</span>
+        <span>小恐龍</span>
+      </button>
+      <button class="mobile-nav-btn" data-target="view-leaderboard">
+        <span class="mobile-icon">🏆</span>
+        <span>排行</span>
+      </button>
+    </nav>
+
+    <!-- ==========================================
+         C. 主內容面板 (Main Content Panel)
+         ========================================== -->
+    <main class="main-content">
+      
+      <!-- 1. 首頁大廳視圖 (Home View) -->
+      <section id="view-home" class="view-section active">
+        <!-- 巨幕廣告橫幅 -->
+        <div class="featured-banner">
+          <div class="banner-glow"></div>
+          <div class="banner-content">
+            <span class="banner-tag">精選射擊大作</span>
+            <h2 class="banner-title">賽博坦克大作戰 (Tank)</h2>
+            <p class="banner-desc">控制你的發光藍色玩家坦克，射擊並躲避摧毀隨機生成的紅色敵方坦克，挑戰最高生存得分！</p>
+            <button class="btn-banner-play" onclick="loadGameInTheater('game-tank')">
+              <span>▶</span> 立即開玩
+            </button>
+          </div>
+        </div>
+
+        <h3 class="section-title">所有益智街機小遊戲</h3>
+        
+        <div class="game-grid">
+          <!-- 卡片 1: 坦克大作戰 -->
+          <div class="game-card" data-game="tank" onclick="loadGameInTheater('game-tank')">
+            <div class="card-thumb">
+              <span class="card-thumb-badge">🛡️</span>
+              <div class="game-card-tags">
+                <span class="card-tag tag-hot">Hot</span>
+                <span class="card-tag" style="background:#8b5cf6;">射擊</span>
+              </div>
+            </div>
+            <div class="card-info">
+              <div>
+                <h4 class="card-title">坦克大作戰</h4>
+                <p class="card-desc">控制玩家坦克方向並開火摧毀敵軍！擁有 3 點生命防禦，挑戰最高擊毀得分。</p>
+              </div>
+              <div class="card-meta">
+                <span class="meta-likes" id="card-likes-tank">👍 95.9% 喜歡</span>
+                <span>🔥 6.2k 在線</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 卡片 2: 貪吃蛇 -->
+          <div class="game-card" data-game="snake" onclick="loadGameInTheater('game-snake')">
+            <div class="card-thumb">
+              <span class="card-thumb-badge">🐍</span>
+              <div class="game-card-tags">
+                <span class="card-tag tag-new">New</span>
+                <span class="card-tag" style="background:#10b981;">雙果</span>
+              </div>
+            </div>
+            <div class="card-info">
+              <div>
+                <h4 class="card-title">經典貪吃蛇 (雙蘋果版)</h4>
+                <p class="card-desc">畫面中將同時出現兩顆紅蘋果！極速吞食能量，修復虛擬方向鍵靈敏度，更爽快的操作。</p>
+              </div>
+              <div class="card-meta">
+                <span class="meta-likes" id="card-likes-snake">👍 96.1% 喜歡</span>
+                <span>🔥 8.1k 在線</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 卡片 3: 小恐龍 -->
+          <div class="game-card" data-game="dino" onclick="loadGameInTheater('game-dino')">
+            <div class="card-thumb">
+              <span class="card-thumb-badge">🦖</span>
+              <div class="game-card-tags">
+                <span class="card-tag tag-hot">Hot</span>
+                <span class="card-tag" style="background:#f43f5e;">寬幅</span>
+              </div>
+            </div>
+            <div class="card-info">
+              <div>
+                <h4 class="card-title">小恐龍快跑 (大畫面版)</h4>
+                <p class="card-desc">升級至 700x350 更寬闊大畫面！調校重力跳躍物理與仙人掌生成，跨越層層阻撓。</p>
+              </div>
+              <div class="card-meta">
+                <span class="meta-likes" id="card-likes-dino">👍 95.3% 喜歡</span>
+                <span>🔥 6.7k 在線</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. 雙欄劇院遊戲視圖 (Game Theater View) -->
+      <section id="view-game" class="view-section">
+        <div class="theater-container">
+          
+          <!-- 左側：超大遊戲畫布與操控細節 -->
+          <div class="theater-main">
+            
+            <div class="game-viewport">
+              
+              <!-- 全螢幕懸浮按鈕 📺 -->
+              <button class="btn-viewport-fullscreen" onclick="toggleViewportFullscreen()" title="全螢幕模式">📺</button>
+
+              <!-- 遊戲一包裝：坦克大作戰 -->
+              <div class="game-wrap" id="wrap-tank">
+                <div class="game-overlay" id="overlay-tank">
+                  <h3 class="overlay-title">坦克大作戰 (Tank Battle)</h3>
+                  <p class="overlay-desc">使用 WASD 或方向鍵移動，點擊滑鼠或 Space 鍵進行雷射開火！</p>
+                  <button class="btn-overlay-action tank-overlay-btn" onclick="startActiveGame('tank')">點擊開始遊戲</button>
+                </div>
+                <div id="tank-game-wrapper">
+                  <canvas id="tank-canvas" width="480" height="480"></canvas>
+                </div>
+              </div>
+
+              <!-- 遊戲二包裝：經典貪吃蛇 -->
+              <div class="game-wrap" id="wrap-snake">
+                <div class="game-overlay" id="overlay-snake">
+                  <h3 class="overlay-title" id="overlay-snake-title">經典貪吃蛇 (雙蘋果版)</h3>
+                  <p class="overlay-desc" id="overlay-snake-desc">雙顆蘋果同步出現！吃蘋果長大，撞牆或撞擊自己尾巴即判定失敗。</p>
+                  <button class="btn-overlay-action snake-overlay-btn" onclick="startActiveGame('snake')">開始遊戲</button>
+                </div>
+                <div id="snake-game-wrapper">
+                  <canvas id="snake-canvas" width="400" height="400"></canvas>
+                  <!-- 手機方向鍵 -->
+                  <div class="mobile-controls">
+                    <button class="dpad-btn up" onmousedown="handleDpadInput('up'); event.preventDefault();" ontouchstart="handleDpadInput('up'); event.preventDefault();">▲</button>
+                    <button class="dpad-btn left" onmousedown="handleDpadInput('left'); event.preventDefault();" ontouchstart="handleDpadInput('left'); event.preventDefault();">◀</button>
+                    <button class="dpad-btn down" onmousedown="handleDpadInput('down'); event.preventDefault();" ontouchstart="handleDpadInput('down'); event.preventDefault();">▼</button>
+                    <button class="dpad-btn right" onmousedown="handleDpadInput('right'); event.preventDefault();" ontouchstart="handleDpadInput('right'); event.preventDefault();">▶</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 遊戲三包裝：小恐龍快跑 -->
+              <div class="game-wrap" id="wrap-dino">
+                <div class="game-overlay" id="overlay-dino">
+                  <h3 class="overlay-title" id="overlay-dino-title">小恐龍快跑 (大畫面版)</h3>
+                  <p class="overlay-desc" id="overlay-dino-desc">點擊畫布任何地方或按空白鍵使恐龍跳起閃避仙人掌。</p>
+                  <button class="btn-overlay-action dino-overlay-btn" onclick="startActiveGame('dino')">開始遊戲</button>
+                </div>
+                <div id="dino-game-wrapper">
+                  <canvas id="dino-canvas" width="700" height="350"></canvas>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 劇院模式大廳下方的基本資訊 -->
+            <div class="theater-details">
+              <div class="detail-header-row">
+                <div>
+                  <h2 class="detail-title" id="details-game-title">遊戲標題</h2>
+                  <div class="detail-meta" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <span class="detail-tag" id="details-game-tag">標籤</span>
+                    <span class="detail-tag">單人</span>
+                    <span class="detail-tag" style="background: rgba(16, 185, 129, 0.1); color: var(--neon-green);">HTML5</span>
+                    
+                    <!-- 按讚/倒讚互動小工具 -->
+                    <div class="rating-widget" style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                      <button id="btn-like" onclick="submitUserVote('like')" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 4px; font-family: var(--font-sans); font-size: 0.8rem; font-weight: 600; transition: all 0.2s; outline: none;">
+                        <span>👍</span> <span id="like-count">0</span>
+                      </button>
+                      <span style="color: rgba(255,255,255,0.1); font-size: 0.8rem;">|</span>
+                      <button id="btn-dislike" onclick="submitUserVote('dislike')" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 4px; font-family: var(--font-sans); font-size: 0.8rem; font-weight: 600; transition: all 0.2s; outline: none;">
+                        <span>👎</span> <span id="dislike-count">0</span>
+                      </button>
+                      <span style="color: rgba(255,255,255,0.1); font-size: 0.8rem;">|</span>
+                      <span id="details-game-likes" style="font-size: 0.8rem; font-weight: 700; color: var(--neon-gold);">--% 喜歡</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="stat-item" style="background: rgba(255,255,255,0.03); padding: 8px 16px; border-radius: 10px;">
+                  <span class="stat-label" id="details-score-label">分數:</span>
+                  <span class="stat-value" id="details-score-val">0</span>
+                </div>
+              </div>
+
+              <div class="detail-description" id="details-game-desc">
+                遊戲介紹描述...
+              </div>
+
+              <!-- 操控引導 -->
+              <div class="control-guide-grid" id="details-controls-guide">
+                <!-- 動態注入 -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 右側：側欄小工具 -->
+          <div class="theater-sidebar">
+            
+            <!-- 登錄面板 (僅在結算死亡時 active 顯示) -->
+            <div class="widget-box widget-register-box" id="widget-register-box">
+              <div class="widget-register-title">
+                <span>🏆</span> 登錄新高分！
+              </div>
+              <p class="widget-register-desc">填寫名字儲存到排行榜上，留下你輝煌的紀錄！</p>
+              
+              <div class="widget-register-stats">
+                <div>
+                  <div style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 2px;">你的成績</div>
+                  <div class="stat-value" id="widget-register-score-val" style="color: var(--neon-gold)">0</div>
+                </div>
+                <div>
+                  <div style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 2px;">排名預估</div>
+                  <div class="stat-value" style="color: #cbd5e1">前 10 名</div>
+                </div>
+              </div>
+
+              <input type="text" class="widget-register-input" id="widget-register-name-input" placeholder="請輸入玩家名稱..." maxlength="10">
+              <button class="btn-widget-submit" id="btn-widget-save">儲存分數</button>
+            </div>
+
+            <!-- 當前遊戲即時排行 -->
+            <div class="widget-box">
+              <h4 class="widget-title">
+                <span>🏆</span>
+                <span id="widget-leaderboard-title">排行</span>
+              </h4>
+              <div class="widget-leaderboard-list" id="widget-leaderboard-list">
+                <!-- 動態載入前五名 -->
+              </div>
+            </div>
+
+            <!-- 同場推薦遊戲 -->
+            <div class="widget-box">
+              <h4 class="widget-title">
+                <span>🔥</span> 更多推薦小遊戲
+              </h4>
+              <div id="widget-recommended-list">
+                <!-- 載入另外兩款遊戲小卡 -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 3. 全局排行榜視圖 (Full Leaderboard View) -->
+      <section id="view-leaderboard" class="view-section">
+        <div class="leaderboard-header">
+          <h3 class="section-title">賽博電玩城 榮譽榜</h3>
+          <select id="full-leaderboard-select" class="leaderboard-select" onchange="renderFullLeaderboard()">
+            <option value="tank">🛡️ 坦克大作戰 (最高得分)</option>
+            <option value="snake">🐍 經典貪吃蛇 (最高得分)</option>
+            <option value="dino">🦖 小恐龍快跑 (跑跳分數)</option>
+          </select>
+        </div>
+
+        <div class="leaderboard-panel">
+          <table class="full-leaderboard-table" id="full-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">名次</th>
+                <th>玩家名稱</th>
+                <th style="text-align: right;">取得分數</th>
+                <th style="width: 150px; text-align: right;">紀錄日期</th>
+              </tr>
+            </thead>
+            <tbody id="full-leaderboard-tbody">
+              <!-- JS 動態寫入 -->
+            </tbody>
+          </table>
+          <div class="leaderboard-empty" id="full-leaderboard-empty" style="display: none; text-align: center; padding: 40px; color: var(--text-muted);">
+            此項目目前尚無紀錄，快來搶下第一名！
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="btn-clear-leaderboard" onclick="clearGlobalLeaderboard()">
+            ⚠️ 重設此項排行榜本機紀錄
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- 彩色粒子禮花容器 -->
+  <div class="confetti-container" id="confetti-container"></div>
+
+
+  <!-- ==========================================
+       JavaScript 核心控制與遊戲邏輯
+       ========================================== -->
+  <script>
+    // 全域 DOM 元素與全域變數
+    const theaterScoreVal = document.getElementById('details-score-val');
+    const confettiContainer = document.getElementById('confetti-container');
+
+    // 貪吃蛇遊戲畫布與全域設定
+    const snakeCanvas = document.getElementById('snake-canvas');
+    const ctxSnake = snakeCanvas.getContext('2d');
+    const sCellCount = 20;
+    const sGridSize = 20;
+
+    // 小恐龍遊戲畫布與全域設定
+    const dinoCanvas = document.getElementById('dino-canvas');
+    const ctxDino = dinoCanvas.getContext('2d');
+
+    /* ==========================================
+       A. 集中式分頁路由控制 (View Router)
+       ========================================== */
+    const menuBtns = document.querySelectorAll('.menu-item-btn, .mobile-nav-btn');
+    const sections = document.querySelectorAll('.view-section');
+
+    menuBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-target');
+        updateNavSelection(target);
+        
+        if (target.startsWith('game-')) {
+          loadGameInTheater(target);
+        } else {
+          switchView(target);
+        }
+      });
+    });
+
+    function updateNavSelection(targetId) {
+      menuBtns.forEach(b => {
+        if (b.getAttribute('data-target') === targetId) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+    }
+
+    function switchView(viewId) {
+      stopAllGameLoops();
+      closeSubmitWidget();
+
+      sections.forEach(sec => {
+        if (sec.id === viewId) {
+          sec.classList.add('active');
+        } else {
+          sec.classList.remove('active');
+        }
+      });
+
+      if (viewId === 'view-home') {
+        randomizeFeaturedBanner();
+        renderAllLikeRates();
+      } else if (viewId === 'view-leaderboard') {
+        renderFullLeaderboard();
+      }
+    }
+
+    function closeSubmitWidget() {
+      document.getElementById('widget-register-box').classList.remove('active');
+    }
+
+    function stopAllGameLoops() {
+      // 停止坦克
+      if (tankTimer) {
+        cancelAnimationFrame(tankTimer);
+        tankTimer = null;
+      }
+      tankActive = false;
+
+      // 停止貪吃蛇
+      if (snakeTimer) {
+        clearInterval(snakeTimer);
+        snakeTimer = null;
+      }
+      snakeActive = false;
+
+      // 停止小恐龍
+      if (dinoAnimId) {
+        cancelAnimationFrame(dinoAnimId);
+        dinoAnimId = null;
+      }
+      dinoActive = false;
+    }
+
+
+    /* ==========================================
+       B. 排行榜模組 (Firebase + LocalStorage 降級雙核心)
+       ========================================== */
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    let db = null;
+    let useFirebase = false;
+    const connStatusEl = document.getElementById('connection-status');
+
+    if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("YOUR_")) {
+      try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        useFirebase = true;
+        connStatusEl.innerText = "☁️ 雲端同步模式";
+        connStatusEl.style.color = "var(--neon-green)";
+      } catch (e) {
+        console.warn("Firebase 初始化出錯，切換至 localStorage 模式", e);
+      }
+    }
+
+    async function submitGameScore(gameId, name, score) {
+      const cleanName = name.trim() || '無名英雄';
+      const dateStr = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+      if (useFirebase && db) {
+        try {
+          await db.collection("arcade_leaderboard").add({
+            gameId,
+            name: cleanName,
+            score,
+            date: dateStr,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        } catch (error) {
+          console.warn("雲端存檔出錯，改存至本地", error);
+          saveScoreToLocalStorage(gameId, cleanName, score, dateStr);
+        }
+      } else {
+        saveScoreToLocalStorage(gameId, cleanName, score, dateStr);
+      }
+    }
+
+    function saveScoreToLocalStorage(gameId, name, score, dateStr) {
+      const key = `cyber_arcade_${gameId}`;
+      try {
+        const raw = localStorage.getItem(key);
+        let list = [];
+        if (raw) {
+          list = JSON.parse(raw) || [];
+        }
+        list.push({ name, score, date: dateStr });
+        
+        // 排行排序：全部皆為得分越高越好
+        list.sort((a, b) => b.score - a.score);
+
+        list = list.slice(0, 10);
+        localStorage.setItem(key, JSON.stringify(list));
+      } catch (e) {
+        console.error("LocalStorage 存檔失敗", e);
+      }
+    }
+
+    async function getGameLeaderboard(gameId, limit = 10) {
+      if (useFirebase && db) {
+        try {
+          let query = db.collection("arcade_leaderboard").where("gameId", "==", gameId);
+          query = query.orderBy("score", "desc");
+          const snapshot = await query.limit(limit).get();
+          const data = [];
+          snapshot.forEach(doc => {
+            const row = doc.data();
+            data.push({
+              name: row.name,
+              score: row.score,
+              date: row.date || ''
+            });
+          });
+          return data;
+        } catch (e) {
+          console.warn("Firestore 讀取失敗，降級本地", e);
+          return getLeaderboardFromLocal(gameId, limit);
+        }
+      } else {
+        return getLeaderboardFromLocal(gameId, limit);
+      }
+    }
+
+    function getLeaderboardFromLocal(gameId, limit = 10) {
+      const key = `cyber_arcade_${gameId}`;
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return [];
+        const list = JSON.parse(raw) || [];
+        list.sort((a, b) => b.score - a.score);
+        return list.slice(0, limit);
+      } catch (e) {
+        console.error("LocalStorage 讀取失敗", e);
+        return [];
+      }
+    }
+
+    function clearGlobalLeaderboard() {
+      const game = document.getElementById('full-leaderboard-select').value;
+      if (confirm(`確定要清除【${getGameTitle(game)}】的本機排行榜紀錄嗎？`)) {
+        localStorage.removeItem(`cyber_arcade_${game}`);
+        renderFullLeaderboard();
+      }
+    }
+
+
+    /* ==========================================
+       C. 排行榜視圖與 Widgets 渲染
+       ========================================== */
+    const fullTbody = document.getElementById('full-leaderboard-tbody');
+    const fullEmpty = document.getElementById('full-leaderboard-empty');
+    const fullTable = document.getElementById('full-table');
+
+    async function renderFullLeaderboard() {
+      const gameId = document.getElementById('full-leaderboard-select').value;
+      fullTbody.innerHTML = '';
+      
+      fullEmpty.style.display = 'block';
+      fullEmpty.innerText = '英雄榜同步中...';
+      fullTable.style.display = 'none';
+
+      const data = await getGameLeaderboard(gameId, 10);
+
+      if (data.length === 0) {
+        fullEmpty.style.display = 'block';
+        fullEmpty.innerText = '目前尚無紀錄，快來搶下頭名寶座！';
+        fullTable.style.display = 'none';
+      } else {
+        fullEmpty.style.display = 'none';
+        fullTable.style.display = 'table';
+
+        data.forEach((row, idx) => {
+          const tr = document.createElement('tr');
+          const rank = idx + 1;
+          let rankClass = 'full-rank';
+          if (rank === 1) rankClass += ' full-rank-1';
+          else if (rank === 2) rankClass += ' full-rank-2';
+          else if (rank === 3) rankClass += ' full-rank-3';
+
+          tr.innerHTML = `
+            <td class="${rankClass}">#${rank}</td>
+            <td style="font-weight: 600;">${escapeHtml(row.name)}</td>
+            <td style="text-align: right; font-weight: 700; font-family: 'Outfit';">${row.score} 分</td>
+            <td style="text-align: right; color: var(--text-muted); font-size: 0.85rem;">${row.date}</td>
+          `;
+          fullTbody.appendChild(tr);
+        });
+      }
+    }
+
+    async function renderTheaterLeaderboardWidget(gameId) {
+      const container = document.getElementById('widget-leaderboard-list');
+      container.innerHTML = '<div style="color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 10px 0;">排行讀取中...</div>';
+      
+      const list = await getGameLeaderboard(gameId, 5);
+      container.innerHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 10px 0;">尚無紀錄</div>';
+      } else {
+        list.forEach((row, idx) => {
+          const div = document.createElement('div');
+          div.classList.add('widget-rank-row');
+          if (idx === 0) div.classList.add('highlight');
+          
+          div.innerHTML = `
+            <span class="widget-rank-num">#${idx + 1}</span>
+            <span class="widget-rank-name">${escapeHtml(row.name)}</span>
+            <span class="widget-rank-score">${row.score} 分</span>
+          `;
+          container.appendChild(div);
+        });
+      }
+    }
+
+
+    /* ==========================================
+       D. HTML5 原生全螢幕模式 API 切換
+       ========================================== */
+    function toggleViewportFullscreen() {
+      const viewport = document.querySelector('.game-viewport');
+      if (!document.fullscreenElement) {
+        viewport.requestFullscreen().catch(err => {
+          alert(`全螢幕切換失敗: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+
+    /* ==========================================
+       E. 劇院模式載入與推薦系統
+       ========================================== */
+    let activeGameId = '';
+
+    function loadGameInTheater(gameId) {
+      activeGameId = gameId.replace('game-', '');
+      updateNavSelection(gameId);
+      switchView('view-game');
+
+      const wrappers = document.querySelectorAll('.game-wrap');
+      wrappers.forEach(w => w.classList.remove('active'));
+      document.getElementById(`wrap-${activeGameId}`).classList.add('active');
+
+      const overlays = document.querySelectorAll('.game-overlay');
+      overlays.forEach(o => o.classList.remove('hidden'));
+
+      updateTheaterDetailsPanel(activeGameId);
+
+      document.getElementById('widget-leaderboard-title').innerText = `${getGameTitle(activeGameId)} 排行榜`;
+      renderTheaterLeaderboardWidget(activeGameId);
+
+      renderRecommendedWidget(activeGameId);
+    }
+
+    function startActiveGame(gameType) {
+      document.getElementById(`overlay-${gameType}`).classList.add('hidden');
+      
+      if (gameType === 'tank') {
+        initTankGame();
+      } else if (gameType === 'snake') {
+        resetSnakeGame();
+      } else if (gameType === 'dino') {
+        resetDinoGame();
+      }
+    }
+
+    function triggerGameEndSettlement(score) {
+      const regBox = document.getElementById('widget-register-box');
+      const scoreVal = document.getElementById('widget-register-score-val');
+      const nameInput = document.getElementById('widget-register-name-input');
+      const saveBtn = document.getElementById('btn-widget-save');
+
+      scoreVal.innerText = `${score} 分`;
+      nameInput.value = localStorage.getItem('last_player_name') || '';
+
+      saveBtn.onclick = async () => {
+        const name = nameInput.value.trim();
+        if (!name) {
+          alert('請輸入名字！');
+          return;
+        }
+        localStorage.setItem('last_player_name', name);
+        saveBtn.innerText = '儲存中...';
+        saveBtn.disabled = true;
+
+        await submitGameScore(activeGameId, name, score);
+        
+        await renderTheaterLeaderboardWidget(activeGameId);
+        regBox.classList.remove('active');
+        triggerConfetti();
+
+        saveBtn.innerText = '儲存分數';
+        saveBtn.disabled = false;
+      };
+
+      regBox.classList.add('active');
+    }
+
+    function updateTheaterDetailsPanel(gameId) {
+      const title = document.getElementById('details-game-title');
+      const tag = document.getElementById('details-game-tag');
+      const desc = document.getElementById('details-game-desc');
+      const guide = document.getElementById('details-controls-guide');
+      const scoreLabel = document.getElementById('details-score-label');
+
+      if (gameId === 'tank') {
+        title.innerText = "坦克大作戰 (Tank Battle)";
+        tag.innerText = "街機射擊";
+        scoreLabel.innerText = "坦克得分:";
+        desc.innerText = "控制您的發光藍色玩家坦克，在賽博網格戰場中閃避並開火擊毀紅色的敵方坦克。敵方坦克會自動尋路朝您駛來，注意別讓牠們撞上！您共有 3 點生命值，看誰能堅持得最久！";
+        guide.innerHTML = `
+          <div class="guide-item">
+            <span class="kbd-btn">W / A / S / D</span>
+            <span>或方向鍵控制移動</span>
+          </div>
+          <div class="guide-item">
+            <span class="kbd-btn">Space 空白鍵</span>
+            <span>或滑鼠左鍵雷射開火</span>
+          </div>
+        `;
+      } else if (gameId === 'snake') {
+        title.innerText = "經典貪吃蛇 - 雙蘋果版";
+        tag.innerText = "街機操作";
+        scoreLabel.innerText = "當前分數:";
+        desc.innerText = "控制發光的綠色貪吃蛇，在虛擬霓虹世界中追逐並吞吃紅色蘋果能量。每吃掉一個蘋果蛇身即增長一節，不小心撞擊到牆壁或自己的身體則遊戲結束。此版本畫面中將同時出現兩顆能量蘋果。";
+        guide.innerHTML = `
+          <div class="guide-item">
+            <span class="kbd-btn">W / A / S / D</span>
+            <span>或方向鍵控制方向</span>
+          </div>
+          <div class="guide-item">
+            <span class="kbd-btn">螢幕方向鍵</span>
+            <span>手機無延遲觸控操控</span>
+          </div>
+        `;
+      } else if (gameId === 'dino') {
+        title.innerText = "小恐龍快跑 - 大畫面版";
+        tag.innerText = "反應閃避";
+        scoreLabel.innerText = "奔跑距離:";
+        desc.innerText = "升級至 700x350 更大視覺畫面。仙人掌障礙物會隨著時間移動得越來越快。看準時機按下跳躍鍵，跨越障礙挑戰最高距離分數！";
+        guide.innerHTML = `
+          <div class="guide-item">
+            <span class="kbd-btn">Space 空白鍵</span>
+            <span>或 W 跳躍</span>
+          </div>
+          <div class="guide-item">
+            <span class="kbd-btn">點擊畫布</span>
+            <span>手機點碰跳躍</span>
+          </div>
+        `;
+      }
+
+      // 動態更新按讚與評分狀態
+      updateVotingWidget(gameId);
+    }
+
+    function renderRecommendedWidget(currentGameId) {
+      const container = document.getElementById('widget-recommended-list');
+      container.innerHTML = '';
+      
+      const games = [
+        { id: 'tank', badge: '🛡️', title: '坦克大作戰', genre: '街機射擊' },
+        { id: 'snake', badge: '🐍', title: '經典貪吃蛇', genre: '街機雙果' },
+        { id: 'dino', badge: '🦖', title: '小恐龍快跑', genre: '大寬幅生存' }
+      ];
+
+      games.forEach(g => {
+        if (g.id === currentGameId) return;
+        const card = document.createElement('div');
+        card.classList.add('rec-card');
+        card.onclick = () => loadGameInTheater(`game-${g.id}`);
+        card.innerHTML = `
+          <span class="rec-card-badge">${g.badge}</span>
+          <div>
+            <div class="rec-card-title">${g.title}</div>
+            <div class="rec-card-genre">${g.genre}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // 按讚/倒讚系統 & 隨機巨幕推薦系統
+    // ==========================================
+    const defaultVotes = {
+      tank: { likes: 320, dislikes: 14, userVote: null },
+      snake: { likes: 450, dislikes: 18, userVote: null },
+      dino: { likes: 280, dislikes: 15, userVote: null }
+    };
+
+    function getVotes() {
+      try {
+        const raw = localStorage.getItem('cyber_arcade_votes');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed.tank && parsed.snake && parsed.dino) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.error("讀取評分數據失敗", e);
+      }
+      localStorage.setItem('cyber_arcade_votes', JSON.stringify(defaultVotes));
+      return defaultVotes;
+    }
+
+    function saveVotes(votes) {
+      try {
+        localStorage.setItem('cyber_arcade_votes', JSON.stringify(votes));
+      } catch (e) {
+        console.error("儲存評分數據失敗", e);
+      }
+    }
+
+    function submitUserVote(voteType) {
+      if (!activeGameId) return;
+      const votes = getVotes();
+      const data = votes[activeGameId] || { likes: 0, dislikes: 0, userVote: null };
+      
+      if (data.userVote === voteType) {
+        if (voteType === 'like') data.likes = Math.max(0, data.likes - 1);
+        else data.dislikes = Math.max(0, data.dislikes - 1);
+        data.userVote = null;
+      } else {
+        if (data.userVote === 'like') data.likes = Math.max(0, data.likes - 1);
+        else if (data.userVote === 'dislike') data.dislikes = Math.max(0, data.dislikes - 1);
+        
+        if (voteType === 'like') data.likes++;
+        else data.dislikes++;
+        data.userVote = voteType;
+      }
+      
+      votes[activeGameId] = data;
+      saveVotes(votes);
+      
+      updateVotingWidget(activeGameId);
+      renderAllLikeRates();
+    }
+
+    function updateVotingWidget(gameId) {
+      const votes = getVotes();
+      const data = votes[gameId] || defaultVotes[gameId];
+      const total = data.likes + data.dislikes;
+      const rate = total > 0 ? ((data.likes / total) * 100).toFixed(1) : '0.0';
+      
+      const likeCountEl = document.getElementById('like-count');
+      const dislikeCountEl = document.getElementById('dislike-count');
+      const likesRateEl = document.getElementById('details-game-likes');
+      const btnLike = document.getElementById('btn-like');
+      const btnDislike = document.getElementById('btn-dislike');
+      
+      if (likeCountEl) likeCountEl.innerText = data.likes;
+      if (dislikeCountEl) dislikeCountEl.innerText = data.dislikes;
+      if (likesRateEl) likesRateEl.innerText = `${rate}% 喜歡`;
+      
+      if (btnLike && btnDislike) {
+        if (data.userVote === 'like') {
+          btnLike.style.color = 'var(--neon-green)';
+          btnLike.style.textShadow = '0 0 8px var(--neon-green-glow)';
+          btnDislike.style.color = 'var(--text-muted)';
+          btnDislike.style.textShadow = 'none';
+        } else if (data.userVote === 'dislike') {
+          btnLike.style.color = 'var(--text-muted)';
+          btnLike.style.textShadow = 'none';
+          btnDislike.style.color = 'var(--neon-rose)';
+          btnDislike.style.textShadow = '0 0 8px var(--neon-rose-glow)';
+        } else {
+          btnLike.style.color = 'var(--text-muted)';
+          btnLike.style.textShadow = 'none';
+          btnDislike.style.color = 'var(--text-muted)';
+          btnDislike.style.textShadow = 'none';
+        }
+      }
+    }
+
+    function renderAllLikeRates() {
+      const votes = getVotes();
+      ['tank', 'snake', 'dino'].forEach(gameId => {
+        const data = votes[gameId] || defaultVotes[gameId];
+        const total = data.likes + data.dislikes;
+        const rate = total > 0 ? ((data.likes / total) * 100).toFixed(1) : '0.0';
+        
+        const cardEl = document.getElementById(`card-likes-${gameId}`);
+        if (cardEl) {
+          cardEl.innerText = `👍 ${rate}% 喜歡`;
+        }
+      });
+    }
+
+    const bannerPool = [
+      {
+        id: 'tank',
+        tag: '精選射擊大作',
+        title: '賽博坦克大作戰 (Tank)',
+        desc: '控制你的發光藍色玩家坦克，射擊並躲避摧毀隨機生成的紅色敵方坦克，挑戰最高生存得分！'
+      },
+      {
+        id: 'snake',
+        tag: '經典街機回歸',
+        title: '經典貪吃蛇 (雙蘋果版)',
+        desc: '畫面中將同時出現兩顆能量紅蘋果！極速吞食蘋果增長身體，修復虛擬方向鍵靈敏度，更爽快的操作。'
+      },
+      {
+        id: 'dino',
+        tag: '懷舊像素跑酷',
+        title: '小恐龍快跑 (大畫面版)',
+        desc: '升級至更大畫布與重力跳躍物理！在荒漠中跳躍躲避仙人掌，挑戰最高奔跑距離與極限反應！'
+      }
+    ];
+
+    function randomizeFeaturedBanner() {
+      const banner = bannerPool[Math.floor(Math.random() * bannerPool.length)];
+      const bannerTag = document.querySelector('.featured-banner .banner-tag');
+      const bannerTitle = document.querySelector('.featured-banner .banner-title');
+      const bannerDesc = document.querySelector('.featured-banner .banner-desc');
+      const bannerBtn = document.querySelector('.featured-banner .btn-banner-play');
+      
+      if (bannerTag) bannerTag.innerText = banner.tag;
+      if (bannerTitle) bannerTitle.innerText = banner.title;
+      if (bannerDesc) bannerDesc.innerText = banner.desc;
+      if (bannerBtn) {
+        bannerBtn.onclick = () => loadGameInTheater(`game-${banner.id}`);
+      }
+    }
+
+    function getGameTitle(gameId) {
+      if (gameId === 'tank') return '坦克大作戰';
+      if (gameId === 'snake') return '經典貪吃蛇';
+      if (gameId === 'dino') return '小恐龍快跑';
+      return '';
+    }
+
+
+    /* ==========================================
+       1. 遊戲一：坦克大作戰 (Tank Battle)
+       ========================================== */
+    const tankCanvas = document.getElementById('tank-canvas');
+    const ctxTank = tankCanvas.getContext('2d');
+
+    let tankPlayer = { x: 240, y: 240, size: 22, angle: 0, speed: 3.2, hp: 3, lastShot: 0, shotCooldown: 260 };
+    let tankBullets = [];
+    let tankEnemies = [];
+    let tankParticles = [];
+    let tankScore = 0;
+    let tankActive = false;
+    let tankTimer = null;
+    let tankEnemySpawnTimer = 0;
+    let tankKeys = {};
+    let screenFlashFrames = 0;
+    let tankMousePos = { x: 240, y: 0 };
+
+    function initTankGame() {
+      stopAllGameLoops();
+      closeSubmitWidget();
+
+      tankPlayer.x = 240;
+      tankPlayer.y = 240;
+      tankPlayer.hp = 3;
+      tankPlayer.angle = 0;
+      tankScore = 0;
+      tankBullets = [];
+      tankEnemies = [];
+      tankParticles = [];
+      tankKeys = {};
+      tankEnemySpawnTimer = 0;
+      screenFlashFrames = 0;
+      theaterScoreVal.innerText = tankScore;
+
+      tankActive = true;
+      tankTimer = requestAnimationFrame(tankGameLoop);
+    }
+
+    function tankGameLoop() {
+      if (!tankActive) return;
+
+      // 1. 更新玩家移動與轉向
+      let dx = 0;
+      let dy = 0;
+      if (tankKeys['w'] || tankKeys['W'] || tankKeys['ArrowUp']) dy -= 1;
+      if (tankKeys['s'] || tankKeys['S'] || tankKeys['ArrowDown']) dy += 1;
+      if (tankKeys['a'] || tankKeys['A'] || tankKeys['ArrowLeft']) dx -= 1;
+      if (tankKeys['d'] || tankKeys['D'] || tankKeys['ArrowRight']) dx += 1;
+
+      if (dx !== 0 || dy !== 0) {
+        // 斜向運動歸一化
+        const len = Math.sqrt(dx*dx + dy*dy);
+        tankPlayer.x += (dx / len) * tankPlayer.speed;
+        tankPlayer.y += (dy / len) * tankPlayer.speed;
+
+        // 邊界防禦
+        tankPlayer.x = Math.max(tankPlayer.size, Math.min(tankCanvas.width - tankPlayer.size, tankPlayer.x));
+        tankPlayer.y = Math.max(tankPlayer.size, Math.min(tankCanvas.height - tankPlayer.size, tankPlayer.y));
+      }
+
+      // 讓玩家坦克朝向滑鼠游標
+      const mouseDx = tankMousePos.x - tankPlayer.x;
+      const mouseDy = tankMousePos.y - tankPlayer.y;
+      tankPlayer.angle = Math.atan2(mouseDy, mouseDx);
+
+      // 2. 自動/按鍵開火檢測 (Space 空白鍵)
+      if (tankKeys[' ']) {
+        shootTankLaser();
+      }
+
+      // 3. 更新子彈
+      tankBullets.forEach(b => {
+        b.x += Math.cos(b.angle) * b.speed;
+        b.y += Math.sin(b.angle) * b.speed;
+      });
+      tankBullets = tankBullets.filter(b => b.x >= 0 && b.x <= tankCanvas.width && b.y >= 0 && b.y <= tankCanvas.height);
+
+      // 4. 生成敵軍 (隨機邊界)
+      const now = Date.now();
+      if (now - tankEnemySpawnTimer > 1200) {
+        spawnTankEnemy();
+        tankEnemySpawnTimer = now;
+      }
+
+      // 5. 更新敵方坦克 (追逐玩家)
+      tankEnemies.forEach(e => {
+        const edx = tankPlayer.x - e.x;
+        const edy = tankPlayer.y - e.y;
+        const dist = Math.sqrt(edx*edx + edy*edy);
+        if (dist > 0) {
+          e.x += (edx / dist) * e.speed;
+          e.y += (edy / dist) * e.speed;
+          e.angle = Math.atan2(edy, edx);
+        }
+      });
+
+      // 6. 碰撞檢測 1：子彈 vs 敵方坦克
+      tankBullets.forEach((b, bIdx) => {
+        tankEnemies.forEach((e, eIdx) => {
+          const cdx = b.x - e.x;
+          const cdy = b.y - e.y;
+          const dist = Math.sqrt(cdx*cdx + cdy*cdy);
+          if (dist < e.size + 4) { // 擊中！
+            // 生成爆破粒子
+            createExplosionParticles(e.x, e.y, '#f43f5e');
+            // 移除敵軍與子彈
+            tankEnemies.splice(eIdx, 1);
+            tankBullets.splice(bIdx, 1);
+            // 累計分數
+            tankScore += 10;
+            theaterScoreVal.innerText = tankScore;
+          }
+        });
+      });
+
+      // 碰撞檢測 2：敵方坦克 vs 玩家坦克
+      tankEnemies.forEach((e, eIdx) => {
+        const cdx = tankPlayer.x - e.x;
+        const cdy = tankPlayer.y - e.y;
+        const dist = Math.sqrt(cdx*cdx + cdy*cdy);
+        if (dist < (tankPlayer.size + e.size) / 2 + 5) { // 撞擊！
+          createExplosionParticles(e.x, e.y, '#ef4444');
+          tankEnemies.splice(eIdx, 1);
+          tankPlayer.hp--;
+          screenFlashFrames = 8; // 紅光閃屏
+          
+          if (tankPlayer.hp <= 0) {
+            handleTankGameOver();
+            return;
+          }
+        }
+      });
+
+      // 7. 更新粒子
+      tankParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.035;
+      });
+      tankParticles = tankParticles.filter(p => p.alpha > 0);
+
+      // 8. 繪製畫面
+      drawTankFrame();
+
+      if (tankActive) {
+        tankTimer = requestAnimationFrame(tankGameLoop);
+      }
+    }
+
+    function shootTankLaser() {
+      const now = Date.now();
+      if (now - tankPlayer.lastShot > tankPlayer.shotCooldown) {
+        // 從砲塔前端射出
+        const bX = tankPlayer.x + Math.cos(tankPlayer.angle) * tankPlayer.size;
+        const bY = tankPlayer.y + Math.sin(tankPlayer.angle) * tankPlayer.size;
+        
+        tankBullets.push({
+          x: bX,
+          y: bY,
+          angle: tankPlayer.angle,
+          speed: 8.5
+        });
+        tankPlayer.lastShot = now;
+      }
+    }
+
+    function spawnTankEnemy() {
+      let x, y;
+      const edge = Math.floor(Math.random() * 4); // 0: 上, 1: 下, 2: 左, 3: 右
+      const size = 18;
+      if (edge === 0) {
+        x = Math.random() * tankCanvas.width;
+        y = -size;
+      } else if (edge === 1) {
+        x = Math.random() * tankCanvas.width;
+        y = tankCanvas.height + size;
+      } else if (edge === 2) {
+        x = -size;
+        y = Math.random() * tankCanvas.height;
+      } else {
+        x = tankCanvas.width + size;
+        y = Math.random() * tankCanvas.height;
+      }
+
+      // 敵軍速度隨分數提高
+      const eSpeed = 1.3 + Math.min(1.5, tankScore / 150);
+
+      tankEnemies.push({
+        x,
+        y,
+        size,
+        speed: eSpeed,
+        angle: 0
+      });
+    }
+
+    function createExplosionParticles(x, y, color) {
+      for (let i = 0; i < 12; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 3.5;
+        tankParticles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          size: 2 + Math.random() * 4,
+          color: color
+        });
+      }
+    }
+
+    function handleTankGameOver() {
+      tankActive = false;
+      cancelAnimationFrame(tankTimer);
+      tankTimer = null;
+
+      const overlay = document.getElementById('overlay-tank');
+      overlay.querySelector('.overlay-title').innerText = '💥 裝甲損毀！';
+      overlay.querySelector('.overlay-title').className = 'overlay-title game-over';
+      overlay.querySelector('.overlay-desc').innerText = `你的坦克已被摧毀！最終擊毀得分：${tankScore} 分。`;
+      overlay.querySelector('.btn-overlay-action').innerText = '再試一次';
+      overlay.classList.remove('hidden');
+
+      triggerGameEndSettlement(tankScore);
+    }
+
+    function drawTankFrame() {
+      ctxTank.fillStyle = '#070714';
+      ctxTank.fillRect(0, 0, tankCanvas.width, tankCanvas.height);
+
+      // 網格線
+      ctxTank.strokeStyle = 'rgba(255,255,255,0.015)';
+      ctxTank.lineWidth = 1;
+      const grid = 30;
+      for (let i = 0; i < tankCanvas.width; i += grid) {
+        ctxTank.beginPath(); ctxTank.moveTo(i, 0); ctxTank.lineTo(i, tankCanvas.height); ctxTank.stroke();
+        ctxTank.beginPath(); ctxTank.moveTo(0, i); ctxTank.lineTo(tankCanvas.width, i); ctxTank.stroke();
+      }
+
+      // 畫發光邊緣
+      ctxTank.strokeStyle = tankActive ? 'var(--neon-purple-glow)' : 'rgba(244,63,94,0.15)';
+      ctxTank.lineWidth = 4;
+      ctxTank.strokeRect(2, 2, tankCanvas.width - 4, tankCanvas.height - 4);
+
+      // 畫粒子
+      tankParticles.forEach(p => {
+        ctxTank.fillStyle = p.color;
+        ctxTank.globalAlpha = p.alpha;
+        ctxTank.beginPath();
+        ctxTank.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctxTank.fill();
+      });
+      ctxTank.globalAlpha = 1; // 恢復透明度
+
+      // 畫子彈
+      ctxTank.fillStyle = '#fef08a'; // 發光黃
+      ctxTank.shadowBlur = 8;
+      ctxTank.shadowColor = '#fbbf24';
+      tankBullets.forEach(b => {
+        ctxTank.beginPath();
+        ctxTank.arc(b.x, b.y, 4, 0, Math.PI*2);
+        ctxTank.fill();
+      });
+      ctxTank.shadowBlur = 0;
+
+      // 畫敵方坦克 (紅色)
+      ctxTank.fillStyle = '#f43f5e';
+      ctxTank.strokeStyle = '#e11d48';
+      ctxTank.lineWidth = 2;
+      tankEnemies.forEach(e => {
+        ctxTank.save();
+        ctxTank.translate(e.x, e.y);
+        ctxTank.rotate(e.angle);
+        
+        // 履帶
+        ctxTank.fillStyle = '#312e81';
+        ctxTank.fillRect(-e.size/2 - 2, -e.size/2, e.size + 4, 3);
+        ctxTank.fillRect(-e.size/2 - 2, e.size/2 - 3, e.size + 4, 3);
+        
+        // 車身
+        ctxTank.fillStyle = '#f43f5e';
+        ctxTank.fillRect(-e.size/2, -e.size/2 + 2, e.size, e.size - 4);
+        
+        // 砲管
+        ctxTank.fillStyle = '#be123c';
+        ctxTank.fillRect(0, -2, e.size, 4);
+
+        ctxTank.restore();
+      });
+
+      // 畫玩家坦克 (發光藍色)
+      ctxTank.save();
+      ctxTank.translate(tankPlayer.x, tankPlayer.y);
+      ctxTank.rotate(tankPlayer.angle);
+
+      // 藍色發光陰影
+      ctxTank.shadowBlur = 12;
+      ctxTank.shadowColor = 'var(--neon-blue)';
+      
+      // 履帶
+      ctxTank.fillStyle = '#1e293b';
+      ctxTank.fillRect(-tankPlayer.size/2 - 2, -tankPlayer.size/2, tankPlayer.size + 4, 4);
+      ctxTank.fillRect(-tankPlayer.size/2 - 2, tankPlayer.size/2 - 4, tankPlayer.size + 4, 4);
+      
+      // 車身 (藍綠漸層)
+      ctxTank.fillStyle = '#06b6d4';
+      ctxTank.fillRect(-tankPlayer.size/2, -tankPlayer.size/2 + 3, tankPlayer.size, tankPlayer.size - 6);
+      
+      // 砲塔圓蓋
+      ctxTank.fillStyle = '#0891b2';
+      ctxTank.beginPath();
+      ctxTank.arc(0, 0, 6, 0, Math.PI * 2);
+      ctxTank.fill();
+      
+      // 砲管
+      ctxTank.fillStyle = '#22d3ee';
+      ctxTank.fillRect(0, -3, tankPlayer.size, 6);
+
+      ctxTank.restore();
+      ctxTank.shadowBlur = 0; // 重置發光
+
+      // 畫 HUD (HP 與分數)
+      ctxTank.fillStyle = '#fff';
+      ctxTank.font = '800 14px Outfit';
+      ctxTank.fillText(`SCORE: ${tankScore}`, 20, 30);
+
+      // 畫生命值 ❤️❤️❤️
+      let heartStr = '';
+      for (let i = 0; i < tankPlayer.hp; i++) heartStr += '❤️';
+      ctxTank.fillText(`HP: ${heartStr}`, tankCanvas.width - 110, 30);
+
+      // 閃屏紅色
+      if (screenFlashFrames > 0) {
+        ctxTank.fillStyle = 'rgba(239, 68, 68, 0.15)';
+        ctxTank.fillRect(0, 0, tankCanvas.width, tankCanvas.height);
+        screenFlashFrames--;
+      }
+    }
+
+    // ==========================================
+    // 集中式輸入控制 (鍵盤、滑鼠與觸控事件監聽)
+    // ==========================================
+
+    // 1. 鍵盤事件監聽
+    window.addEventListener('keydown', (e) => {
+      if (!activeGameId) return;
+
+      if (activeGameId === 'tank') {
+        tankKeys[e.key] = true;
+        if (e.key === ' ' || e.key === 'Spacebar') {
+          if (tankActive) {
+            shootTankLaser();
+            e.preventDefault();
+          }
+        }
+      } else if (activeGameId === 'snake') {
+        if (snakeActive) {
+          // 防止鍵盤滾動頁面
+          if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 's', 'a', 'd', 'W', 'S', 'A', 'D'].includes(e.key)) {
+            e.preventDefault();
+          }
+          let next = { x: 0, y: 0 };
+          switch (e.key.toLowerCase()) {
+            case 'w':
+            case 'arrowup':
+              next = { x: 0, y: -1 };
+              break;
+            case 's':
+            case 'arrowdown':
+              next = { x: 0, y: 1 };
+              break;
+            case 'a':
+            case 'arrowleft':
+              next = { x: -1, y: 0 };
+              break;
+            case 'd':
+            case 'arrowright':
+              next = { x: 1, y: 0 };
+              break;
+          }
+          if (next.x !== 0 || next.y !== 0) {
+            // 禁止直接回頭
+            if (next.x !== -sDir.x && next.y !== -sDir.y) {
+              sNextDir = next;
+            }
+          }
+        }
+      } else if (activeGameId === 'dino') {
+        if (e.key === ' ' || e.key === 'Spacebar' || e.key.toLowerCase() === 'w' || e.key === 'ArrowUp') {
+          if (dinoActive) {
+            makeDinoJump();
+            e.preventDefault();
+          }
+        }
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (activeGameId === 'tank') {
+        tankKeys[e.key] = false;
+      }
+    });
+
+    // 2. 坦克滑鼠/觸控追蹤與射擊
+    function updateTankMousePos(clientX, clientY) {
+      const rect = tankCanvas.getBoundingClientRect();
+      tankMousePos.x = (clientX - rect.left) * (tankCanvas.width / rect.width);
+      tankMousePos.y = (clientY - rect.top) * (tankCanvas.height / rect.height);
+    }
+
+    tankCanvas.addEventListener('mousemove', (e) => {
+      if (activeGameId === 'tank' && tankActive) {
+        updateTankMousePos(e.clientX, e.clientY);
+      }
+    });
+
+    tankCanvas.addEventListener('mousedown', (e) => {
+      if (activeGameId === 'tank' && tankActive) {
+        updateTankMousePos(e.clientX, e.clientY);
+        shootTankLaser();
+      }
+    });
+
+    tankCanvas.addEventListener('touchstart', (e) => {
+      if (activeGameId === 'tank' && tankActive && e.touches.length > 0) {
+        updateTankMousePos(e.touches[0].clientX, e.touches[0].clientY);
+        shootTankLaser();
+        e.preventDefault();
+      }
+    });
+
+    tankCanvas.addEventListener('touchmove', (e) => {
+      if (activeGameId === 'tank' && tankActive && e.touches.length > 0) {
+        updateTankMousePos(e.touches[0].clientX, e.touches[0].clientY);
+        e.preventDefault();
+      }
+    });
+
+    // 3. 小恐龍滑鼠/觸控跳躍
+    dinoCanvas.addEventListener('mousedown', (e) => {
+      if (activeGameId === 'dino' && dinoActive) {
+        makeDinoJump();
+      }
+    });
+
+    dinoCanvas.addEventListener('touchstart', (e) => {
+      if (activeGameId === 'dino' && dinoActive) {
+        makeDinoJump();
+        e.preventDefault();
+      }
+    });
+
+    // 4. 貪吃蛇虛擬按鈕 D-pad 操控邏輯
+    function handleDpadInput(direction) {
+      if (!snakeActive) return;
+      let next = { x: 0, y: 0 };
+      switch (direction) {
+        case 'up':
+          next = { x: 0, y: -1 };
+          break;
+        case 'down':
+          next = { x: 0, y: 1 };
+          break;
+        case 'left':
+          next = { x: -1, y: 0 };
+          break;
+        case 'right':
+          next = { x: 1, y: 0 };
+          break;
+      }
+      if (next.x !== -sDir.x && next.y !== -sDir.y) {
+        sNextDir = next;
+      }
+    }
+
+
+    /* ==========================================
+       2. 遊戲二：經典貪吃蛇 (雙蘋果與 mobile 修復)
+       ========================================== */
+    let sFoods = []; // 雙蘋果
+    let sSnake = [];
+    let sDir = { x: 0, y: 0 };
+    let sNextDir = { x: 0, y: 0 };
+    let sScore = 0;
+    let snakeTimer = null;
+    let snakeActive = false;
+    let snakeInterval = 140;
+
+    function resetSnakeGame() {
+      stopAllGameLoops();
+      closeSubmitWidget();
+
+      sSnake = [
+        { x: 10, y: 10 },
+        { x: 9, y: 10 },
+        { x: 8, y: 10 }
+      ];
+      sDir = { x: 1, y: 0 };
+      sNextDir = { x: 1, y: 0 };
+      sScore = 0;
+      snakeInterval = 140;
+      theaterScoreVal.innerText = sScore;
+
+      // 生成兩顆蘋果
+      sFoods = [];
+      spawnSnakeFood(0);
+      spawnSnakeFood(1);
+
+      drawSnakeFrame();
+
+      snakeActive = true;
+      snakeTimer = setInterval(snakeTick, snakeInterval);
+    }
+
+    function spawnSnakeFood(index) {
+      let overlap = true;
+      let newFood = { x: 0, y: 0 };
+      while (overlap) {
+        newFood = {
+          x: Math.floor(Math.random() * sCellCount),
+          y: Math.floor(Math.random() * sCellCount)
+        };
+        overlap = sSnake.some(p => p.x === newFood.x && p.y === newFood.y) ||
+                  sFoods.some((f, idx) => idx !== index && f.x === newFood.x && f.y === newFood.y);
+      }
+      sFoods[index] = newFood;
+    }
+
+    function snakeTick() {
+      if (!snakeActive) return;
+      sDir = sNextDir;
+
+      const head = { x: sSnake[0].x + sDir.x, y: sSnake[0].y + sDir.y };
+
+      // 檢查撞邊
+      if (head.x < 0 || head.x >= sCellCount || head.y < 0 || head.y >= sCellCount) {
+        handleSnakeDeath();
+        return;
+      }
+      // 檢查撞尾
+      if (sSnake.some(p => p.x === head.x && p.y === head.y)) {
+        handleSnakeDeath();
+        return;
+      }
+
+      sSnake.unshift(head);
+
+      // 碰撞檢查：是否有吃下任一顆蘋果
+      const eatenIdx = sFoods.findIndex(f => head.x === f.x && head.y === f.y);
+      if (eatenIdx !== -1) {
+        sScore += 10;
+        theaterScoreVal.innerText = sScore;
+        // 替換被吃掉的蘋果
+        spawnSnakeFood(eatenIdx);
+
+        // 加速
+        if (sScore % 50 === 0 && snakeInterval > 60) {
+          snakeInterval -= 8;
+          clearInterval(snakeTimer);
+          snakeTimer = setInterval(snakeTick, snakeInterval);
+        }
+      } else {
+        sSnake.pop();
+      }
+      drawSnakeFrame();
+    }
+
+    function handleSnakeDeath() {
+      snakeActive = false;
+      if (snakeTimer) {
+        clearInterval(snakeTimer);
+        snakeTimer = null;
+      }
+
+      const overlay = document.getElementById('overlay-snake');
+      overlay.querySelector('.overlay-title').innerText = '🐍 遊戲結束！';
+      overlay.querySelector('.overlay-title').className = 'overlay-title game-over';
+      overlay.querySelector('.overlay-desc').innerText = `貪吃蛇碰撞到邊界或自己。最終得分：${sScore} 分。`;
+      overlay.querySelector('.btn-overlay-action').innerText = '再試一次';
+      overlay.classList.remove('hidden');
+
+      triggerGameEndSettlement(sScore);
+    }
+
+    function drawSnakeFrame() {
+      ctxSnake.fillStyle = '#0b0a1a';
+      ctxSnake.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+      // 網格線
+      ctxSnake.strokeStyle = 'rgba(255,255,255,0.02)';
+      ctxSnake.lineWidth = 1;
+      for (let i = 0; i <= sCellCount; i++) {
+        ctxSnake.beginPath(); ctxSnake.moveTo(i * sGridSize, 0); ctxSnake.lineTo(i * sGridSize, snakeCanvas.height); ctxSnake.stroke();
+        ctxSnake.beginPath(); ctxSnake.moveTo(0, i * sGridSize); ctxSnake.lineTo(snakeCanvas.width, i * sGridSize); ctxSnake.stroke();
+      }
+
+      ctxSnake.strokeStyle = snakeActive ? 'rgba(16,185,129,0.3)' : 'rgba(244,63,94,0.2)';
+      ctxSnake.lineWidth = 4;
+      ctxSnake.strokeRect(2, 2, snakeCanvas.width - 4, snakeCanvas.height - 4);
+
+      // 繪製兩顆蘋果
+      sFoods.forEach(food => {
+        ctxSnake.shadowBlur = 10;
+        ctxSnake.shadowColor = '#f43f5e';
+        ctxSnake.fillStyle = '#f43f5e';
+        ctxSnake.beginPath();
+        const radius = sGridSize / 2 - 2;
+        const fX = food.x * sGridSize + sGridSize / 2;
+        const fY = food.y * sGridSize + sGridSize / 2;
+        ctxSnake.arc(fX, fY, radius, 0, Math.PI * 2);
+        ctxSnake.fill();
+        ctxSnake.shadowBlur = 0;
+
+        ctxSnake.fillStyle = '#10b981';
+        ctxSnake.fillRect(fX - 1, fY - radius - 1, 3, 3);
+      });
+
+      // 畫蛇身
+      sSnake.forEach((p, index) => {
+        if (index === 0) {
+          ctxSnake.fillStyle = '#34d399';
+          ctxSnake.shadowBlur = 8;
+          ctxSnake.shadowColor = 'var(--neon-green)';
+        } else {
+          ctxSnake.fillStyle = '#059669';
+          ctxSnake.shadowBlur = 0;
+        }
+
+        const sX = p.x * sGridSize + 2;
+        const sY = p.y * sGridSize + 2;
+        const sW = sGridSize - 4;
+        const sH = sGridSize - 4;
+        
+        ctxSnake.beginPath();
+        ctxSnake.roundRect ? ctxSnake.roundRect(sX, sY, sW, sH, 4) : ctxSnake.rect(sX, sY, sW, sH);
+        ctxSnake.fill();
+
+        if (index === 0) {
+          ctxSnake.fillStyle = '#000';
+          let e1 = {x:0, y:0}, e2 = {x:0, y:0};
+          if (sDir.x === 1) { e1={x:sX+12,y:sY+4}; e2={x:sX+12,y:sY+12}; }
+          else if (sDir.x === -1) { e1={x:sX+4,y:sY+4}; e2={x:sX+4,y:sY+12}; }
+          else if (sDir.y === 1) { e1={x:sX+4,y:sY+12}; e2={x:sX+12,y:sY+12}; }
+          else { e1={x:sX+4,y:sY+4}; e2={x:sX+12,y:sY+4}; }
+          ctxSnake.fillRect(e1.x, e1.y, 2, 2);
+          ctxSnake.fillRect(e2.x, e2.y, 2, 2);
+        }
+      });
+      ctxSnake.shadowBlur = 0;
+    }
+
+
+    /* ==========================================
+       3. 遊戲三：小恐龍快跑 (大畫面尺寸調校)
+       ========================================== */
+    let dDino = {
+      x: 60,
+      y: 0,
+      width: 34,      // 放大尺寸
+      height: 42,     // 放大尺寸
+      velocityY: 0,
+      jumpForce: -11.5, // 調校跳躍力
+      gravity: 0.58,   // 調校重力
+      isJumping: false
+    };
+
+    let dGroundY = 300; // 更新地面高度
+    let dCacti = [];
+    let dScore = 0;
+    let dSpeed = 5.5;
+    let dinoActive = false;
+    let dinoAnimId = null;
+    let dLastSpawn = 0;
+
+    function resetDinoGame() {
+      stopAllGameLoops();
+      closeSubmitWidget();
+
+      dDino.y = dGroundY - dDino.height;
+      dDino.velocityY = 0;
+      dDino.isJumping = false;
+
+      dCacti = [];
+      dScore = 0;
+      dSpeed = 5.5;
+      dLastSpawn = Date.now();
+      theaterScoreVal.innerText = 0;
+
+      dinoActive = true;
+      if (dinoAnimId) cancelAnimationFrame(dinoAnimId);
+      dinoAnimId = requestAnimationFrame(dinoLoop);
+    }
+
+    function dinoLoop() {
+      if (!dinoActive) return;
+
+      dDino.velocityY += dDino.gravity;
+      dDino.y += dDino.velocityY;
+
+      if (dDino.y >= dGroundY - dDino.height) {
+        dDino.y = dGroundY - dDino.height;
+        dDino.velocityY = 0;
+        dDino.isJumping = false;
+      }
+
+      const now = Date.now();
+      const delay = 1300 + Math.random() * 900;
+      if (now - dLastSpawn > delay) {
+        spawnCactusObstacle();
+        dLastSpawn = now;
+      }
+
+      dCacti.forEach(c => c.x -= dSpeed);
+      dCacti = dCacti.filter(c => c.x > -50);
+
+      // 加速
+      dSpeed = 5.5 + (dScore / 120);
+
+      dScore++;
+      theaterScoreVal.innerText = Math.floor(dScore / 6);
+
+      if (checkDinoCollision()) {
+        handleDinoDeath();
+        return;
+      }
+
+      drawDinoFrame();
+      dinoAnimId = requestAnimationFrame(dinoLoop);
+    }
+
+    function spawnCactusObstacle() {
+      const type = Math.random() > 0.5 ? 'single' : 'double';
+      const height = 30 + Math.floor(Math.random() * 22); // 放大仙人掌高度 30 - 52
+      const width = type === 'single' ? 16 : 30;         // 放大寬度
+
+      dCacti.push({
+        x: dinoCanvas.width + 10,
+        y: dGroundY - height,
+        width,
+        height
+      });
+    }
+
+    function checkDinoCollision() {
+      const pad = 3;
+      const dL = dDino.x + pad;
+      const dR = dDino.x + dDino.width - pad;
+      const dT = dDino.y + pad;
+      const dB = dDino.y + dDino.height;
+
+      return dCacti.some(c => {
+        const cL = c.x + 1;
+        const cR = c.x + c.width - 1;
+        const cT = c.y + 2;
+        const cB = c.y + c.height;
+
+        return (dL < cR && dR > cL && dT < cB && dB > cT);
+      });
+    }
+
+    function handleDinoDeath() {
+      dinoActive = false;
+      if (dinoAnimId) {
+        cancelAnimationFrame(dinoAnimId);
+        dinoAnimId = null;
+      }
+
+      const finalScore = Math.floor(dScore / 6);
+      const overlay = document.getElementById('overlay-dino');
+      overlay.querySelector('.overlay-title').innerText = '🦖 奔跑結束！';
+      overlay.querySelector('.overlay-title').className = 'overlay-title game-over';
+      overlay.querySelector('.overlay-desc').innerText = `小恐龍碰撞到仙人掌了。最終得分：${finalScore} 分。`;
+      overlay.querySelector('.btn-overlay-action').innerText = '再試一次';
+      overlay.classList.remove('hidden');
+
+      triggerGameEndSettlement(finalScore);
+    }
+
+    function makeDinoJump() {
+      if (!dDino.isJumping && dinoActive) {
+        dDino.velocityY = dDino.jumpForce;
+        dDino.isJumping = true;
+      }
+    }
+
+    function drawDinoFrame() {
+      ctxDino.fillStyle = '#0b0a1a';
+      ctxDino.fillRect(0, 0, dinoCanvas.width, dinoCanvas.height);
+
+      // 地面虛線
+      ctxDino.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctxDino.lineWidth = 2;
+      ctxDino.setLineDash([5, 8]);
+      ctxDino.beginPath();
+      ctxDino.moveTo(0, dGroundY);
+      ctxDino.lineTo(dinoCanvas.width, dGroundY);
+      ctxDino.stroke();
+      ctxDino.setLineDash([]);
+
+      ctxDino.strokeStyle = dinoActive ? 'rgba(244,63,94,0.3)' : 'rgba(255,255,255,0.05)';
+      ctxDino.strokeRect(1, 1, dinoCanvas.width - 2, dinoCanvas.height - 2);
+
+      // 畫發光小恐龍
+      ctxDino.fillStyle = '#f43f5e';
+      ctxDino.shadowBlur = dinoActive ? 12 : 0;
+      ctxDino.shadowColor = '#f43f5e';
+
+      const dX = dDino.x;
+      const dY = dDino.y;
+
+      // 身體
+      ctxDino.fillRect(dX + 5, dY + 11, 23, 21);
+      // 頭
+      ctxDino.fillRect(dX + 13, dY, 21, 13);
+      // 嘴
+      ctxDino.fillRect(dX + 29, dY + 5, 5, 5);
+      // 尾
+      ctxDino.fillRect(dX, dY + 16, 5, 11);
+      // 眼
+      ctxDino.fillStyle = '#0b0a1a';
+      ctxDino.shadowBlur = 0;
+      ctxDino.fillRect(dX + 18, dY + 4, 3, 3);
+
+      // 腳步
+      ctxDino.fillStyle = '#f43f5e';
+      ctxDino.shadowBlur = dinoActive ? 12 : 0;
+      if (dDino.isJumping) {
+        ctxDino.fillRect(dX + 8, dY + 32, 5, 5);
+        ctxDino.fillRect(dX + 21, dY + 32, 5, 5);
+      } else {
+        const step = Math.floor(dScore / 4) % 2;
+        ctxDino.fillRect(dX + 8, dY + 32, 5, step === 0 ? 8 : 5);
+        ctxDino.fillRect(dX + 21, dY + 32, 5, step === 1 ? 8 : 5);
+      }
+
+      // 畫仙人掌 (放大尺寸)
+      ctxDino.fillStyle = '#10b981';
+      ctxDino.shadowBlur = dinoActive ? 8 : 0;
+      ctxDino.shadowColor = '#10b981';
+
+      dCacti.forEach(c => {
+        const cX = c.x;
+        const cY = c.y;
+        const cW = c.width;
+        const cH = c.height;
+
+        if (cW === 16) {
+          ctxDino.fillRect(cX + 6, cY, 4, cH);
+          ctxDino.fillRect(cX, cY + 8, 11, 4);
+          ctxDino.fillRect(cX, cY + 4, 4, 4);
+          ctxDino.fillRect(cX + 11, cY + 12, 5, 4);
+          ctxDino.fillRect(cX + 12, cY + 8, 4, 4);
+        } else {
+          ctxDino.fillRect(cX + 5, cY, 5, cH);
+          ctxDino.fillRect(cX + 1, cY + 8, 9, 4);
+          ctxDino.fillRect(cX + 1, cY + 4, 4, 4);
+
+          const smH = cH - 10;
+          const smY = dGroundY - smH;
+          ctxDino.fillRect(cX + 20, smY, 4, smH);
+          ctxDino.fillRect(cX + 16, smY + 5, 8, 3);
+          ctxDino.fillRect(cX + 22, smY + 2, 3, 3);
+        }
+      });
+      ctxDino.shadowBlur = 0;
+    }
+
+
+    /* ==========================================
+       G. 輔助 Fisher-Yates 洗牌函數
+       ========================================== */
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function triggerConfetti() {
+      confettiContainer.innerHTML = '';
+      const colors = ['#f43f5e', '#a855f7', '#6366f1', '#10b981', '#fbbf24', '#06b6d4'];
+      for (let i = 0; i < 60; i++) {
+        const c = document.createElement('div');
+        c.classList.add('confetti');
+        c.style.left = Math.random() * 100 + '%';
+        c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animationDelay = Math.random() * 1.8 + 's';
+        c.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+        const size = Math.random() * 6 + 6;
+        c.style.width = size + 'px';
+        c.style.height = size + 'px';
+        confettiContainer.appendChild(c);
+      }
+      setTimeout(() => { confettiContainer.innerHTML = ''; }, 3500);
+    }
+
+    window.addEventListener('resize', () => {
+      if (activeGameId === 'snake' && snakeActive) drawSnakeFrame();
+      if (activeGameId === 'dino' && dinoActive) drawDinoFrame();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      randomizeFeaturedBanner();
+      renderAllLikeRates();
+      switchView('view-home');
+    });
+  </script>
+</body>
+</html>
